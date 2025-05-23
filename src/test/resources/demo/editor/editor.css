@@ -1,0 +1,10 @@
+
+.sphix-editor:status-invalid {
+  -fx-effect: dropshadow(three-pass-box, darkred, 5, 0, 0, 0);
+  -fx-focus-color: darkred;
+}
+
+.sphix-editor:status-empty {
+  -fx-effect: dropshadow(three-pass-box, gold, 5, 0, 0, 0);
+  -fx-focus-color: gold;
+}
