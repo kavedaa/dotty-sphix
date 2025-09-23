@@ -3,21 +3,11 @@ package org.sphix.messagebus
 trait Message
 
 
-trait MessageReceiver(using bus: MessageBus):
-
-  val receive: PartialFunction[Message, Unit]
-
-  bus.register(this)
 
 //  given MessageBus = new MessageDispatcher(bus)
 
 
-trait MessageSender(using bus: MessageBus):
-  def send(message: Message): Unit =
-    bus.send(this, message)
-
-
-trait MessageTranceiver(using MessageBus) extends MessageReceiver with MessageSender
+// trait MessageTranceiver(using MessageBus) extends MessageReceiver with MessageSender
 
 
 // class MessageDispatcher(bus: MessageBus) extends MessageBus with MessageReceiver:
@@ -27,23 +17,44 @@ trait MessageTranceiver(using MessageBus) extends MessageReceiver with MessageSe
 
 class MessageBus:
 
-  private val receivers = collection.mutable.Set[MessageReceiver]()
+  private val receivers = collection.mutable.Set[MessageBus.Receiver]()
 
-  def register(receiver: MessageReceiver): Unit =
+  def register(receiver: MessageBus.Receiver): Unit =
+    onRegister(receiver)
     receivers += receiver
 
-  def unregister(receiver: MessageReceiver): Unit =
+  def unregister(receiver: MessageBus.Receiver): Unit =
+    onUnregister(receiver)
     receivers -= receiver
 
-  def send(source: AnyRef, message: Message): Unit =
-    for receiver <- receivers if source ne receiver do
+  def send(source: MessageBus.Source, message: Message): Unit =
+    onSend(message)
+    for receiver <- receivers if source.obj ne receiver do
+      onReceive(message)
       receiver.receive.applyOrElse(message, _ => ())
 
+  def getReceivers(): List[MessageBus.Receiver] = receivers.toList
 
-object Test:
+  //  overrideable hooks
 
-  case class TestMessage(text: String) extends Message
+  def onRegister(receiver: MessageBus.Receiver): Unit = {}
+  def onUnregister(receiver: MessageBus.Receiver): Unit = {}
+  def onSend(message: Message): Unit = {}
+  def onReceive(message: Message): Unit = {}
 
-  class TestReceiver(using MessageBus) extends MessageReceiver:
-    val receive = 
-      case message: TestMessage => println(s"TestReceiver received: $message")
+
+object MessageBus:
+
+  case class Source(obj: AnyRef)
+
+  trait Sender:
+    given Source = Source(this)
+
+  trait Receiver(using bus: MessageBus):
+    val receive: PartialFunction[Message, Unit]
+    def unregisterMessageBusReceiver() = bus.unregister(this)
+    bus.register(this)
+
+  def send(message: Message)(using bus: MessageBus, source: Source): Unit =
+    bus.send(source, message)
+
