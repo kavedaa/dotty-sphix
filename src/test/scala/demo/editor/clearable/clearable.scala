@@ -25,8 +25,8 @@ object ClearableDemo extends BorderPane with DemoUtils:
 
   val primitivesButton = new Button("Primitives")
 
-  primitivesButton.setOnAction: _ =>
-    new EditorDialog[Data].showAndWait().ifPresent(println)
+  // primitivesButton.setOnAction: _ =>
+  //   new EditorDialog[Data].showAndWait().ifPresent(println)
 
   val toolbar = new ToolBar(primitivesButton)
 

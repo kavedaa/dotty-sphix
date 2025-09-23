@@ -31,11 +31,11 @@ object OptionDemo extends BorderPane:
   primitiveButton.setOnAction: _ =>
     new EditorDialog[Option[String]]().showAndWait().ifPresent(println)
 
-  comboButton.setOnAction: _ =>
-    new EditorDialog[Option[Hobby]]().showAndWait().ifPresent(println)
+  // comboButton.setOnAction: _ =>
+  //   new EditorDialog[Option[Hobby]]().showAndWait().ifPresent(println)
 
-  compositeButton.setOnAction: _ =>
-    new EditorDialog[Person]().showAndWait().ifPresent(println)
+  // compositeButton.setOnAction: _ =>
+  //   new EditorDialog[Person]().showAndWait().ifPresent(println)
 
   // initialButton.setOnAction: _ =>
   //   val person = Person("John", "Smith", 34, true)

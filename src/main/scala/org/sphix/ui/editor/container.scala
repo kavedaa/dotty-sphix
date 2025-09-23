@@ -7,7 +7,7 @@ import org.sphix.collection.ObservableSeq
 
 trait Container:
   def layout(isTopLevel: Boolean, onLayoutChange: Option[() => Unit] = None): Node
-  def withEditor(editor: Editor[?]): Container
+//  def withEditor(editor: Editor[?]): Container
 
 object Container:
 

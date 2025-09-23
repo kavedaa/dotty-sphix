@@ -21,19 +21,19 @@ object EditorFactory:
   def apply[A](factory: => Editor[A]): EditorFactory[A] = new EditorFactory:
     def createEditor = factory
 
-  given option[A](using inner: EditorFactory[A]): EditorFactory[Option[A]] =
-    new EditorFactory:
-      def createEditor = new Editor:
-        val innerEditor = inner.createEditor
-        type C = innerEditor.C
-        def get = Option(innerEditor.get) // TODO not sure if this is right
-        def value = innerEditor.value.map(_.liftOption)
-        def set(x: Option[A]) = x match
-          case Some(value) => innerEditor.set(value)
-          case None => clear()
-        val status = Val(Status.Valid)
-        def clear() = innerEditor.clear()
-        def container(label: Option[String]) = innerEditor.container(label).withEditor(this)
+  // given option[A](using inner: EditorFactory[A]): EditorFactory[Option[A]] =
+  //   new EditorFactory:
+  //     def createEditor = new Editor:
+  //       val innerEditor = inner.createEditor
+  //       type C = innerEditor.C
+  //       def get = Option(innerEditor.get) // TODO not sure if this is right
+  //       def value = innerEditor.value.map(_.liftOption)
+  //       def set(x: Option[A]) = x match
+  //         case Some(value) => innerEditor.set(value)
+  //         case None => clear()
+  //       val status = Val(Status.Valid)
+  //       def clear() = innerEditor.clear()
+  //       def container(label: Option[String]) = innerEditor.container(label).withEditor(this)
 
   extension [A] (self: EditorFactory[A]) 
     def transform[B](using f: A => B)(using g: B => A): EditorFactory[B] = 

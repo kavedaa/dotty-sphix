@@ -29,7 +29,7 @@ enum PetKind:
 object PetKind:
   given (PetKind => String) = _.toString
 
-case class Pet(kind: PetKind, isMammal: Boolean, birthDate: Option[LocalDate])
+case class Pet(kind: PetKind, isMammal: Boolean, birthDate: LocalDate)
 // case class Pet(name: String, age: Int)
 
 enum Hobby(val name: String, val description: String):
@@ -147,9 +147,9 @@ class Demo extends SimpleApp:
 
   val framesButton = new Button("Frames"):
     setOnAction { _ =>
-      given EditorFactory[PetKind] = EditorFactory.ComboBox[PetKind](PetKind.values)
-      val dialog = new EditorDialog[Human]
-      dialog.showAndWait().ifPresent(println)
+      // given EditorFactory[PetKind] = EditorFactory.ComboBox[PetKind](PetKind.values)
+      // val dialog = new EditorDialog[Human]
+      // dialog.showAndWait().ifPresent(println)
     }
 
   val layout1Button = new Button("Layout1"):

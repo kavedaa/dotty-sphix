@@ -20,7 +20,6 @@ import no.vedaadata.text.LabelTransformer
 import org.sphix.control.cell.DataCell
 import org.sphix.control.cell.DataType
 import org.apache.poi.ss.usermodel.Workbook
-import org.sphix.ui.editor.EditorFactory.option
 import org.sphix.ui.editor.EditorFactory
 
 object TableExcel:
