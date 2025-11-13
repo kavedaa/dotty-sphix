@@ -22,6 +22,7 @@ import demo.editor.combobox.ComboBoxDemo
 import demo.editor.table.TableDemo
 import demo.editor.dynamic.DynamicDemo
 import demo.editor.clearable.ClearableDemo
+import demo.editor.files.FilesDemo
 
 enum PetKind:
   case Dog, Cat, Rabbit
@@ -133,6 +134,10 @@ class Demo extends SimpleApp:
     setClosable(false)
     setContent(ClearableDemo)
 
+  val filesDemo = new Tab("Files"):
+    setClosable(false)
+    setContent(FilesDemo)
+
   val listButton = new Button("List"):
     setOnAction { _ =>
       given EditorFactory[Country] = EditorFactory.ListViewItem(Country.items)(_.name)
@@ -144,7 +149,6 @@ class Demo extends SimpleApp:
       given EditorFactory[Hobby] = EditorFactory.ComboBox(hobbies)(using new ComboBoxFactory.Searchable)
       new EditorDialog[Hobby]("Please select a hobby").showAndWait().ifPresent(println)
     }
-
   val framesButton = new Button("Frames"):
     setOnAction { _ =>
       // given EditorFactory[PetKind] = EditorFactory.ComboBox[PetKind](PetKind.values)
@@ -175,7 +179,15 @@ class Demo extends SimpleApp:
 
   override def stylesheet = Some(getClass.getResource("editor.css").toExternalForm)
 
-  val root = new TabPane(primitiveDemo, comboBoxDemo, compositeDemo, optionDemo, tableDemo, dynamicDemo, clearableDemo)
+  val root = new TabPane(
+    primitiveDemo, 
+    comboBoxDemo, 
+    compositeDemo, 
+    optionDemo, 
+    tableDemo, 
+    dynamicDemo, 
+    clearableDemo,
+    filesDemo)
 
 //  override def stylesheet = Some("style.css")
 

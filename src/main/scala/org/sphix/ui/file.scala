@@ -60,7 +60,8 @@ trait FileChoosing:
     val fileChooser = new FileChooser
 
     val filters = fileTypes map { case (description, extensions) =>
-      val extensionFormats = extensions.map(ext => s"*.$ext")
+      val extensionsWithFallback = if extensions.isEmpty then List("*") else extensions
+      val extensionFormats = extensionsWithFallback.map(ext => s"*.$ext")
       new FileChooser.ExtensionFilter(description, extensionFormats*)
     }
     
