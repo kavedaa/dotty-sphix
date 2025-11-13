@@ -3,6 +3,7 @@ package org.sphix.ui.editor
 import java.time.LocalDate
 
 import javafx.scene.control.*
+import javafx.scene.layout.*
 
 import org.sphix.*
 import org.sphix.control.*
@@ -30,16 +31,23 @@ class CheckBoxEditorFactory(using Layouter[Container.Primitive]) extends EditorF
     def clear() = checkBox.setSelected(false)
     def container(label: Option[String]) = Container.Primitive(this, label, checkBox)
 
-//  TODO 
-// class BooleanRadiosEditorFactory(using Layouter[Container.Primitive]) extends EditorFactory[Boolean]:
-//   def createEditor = new Editor[Boolean]:
-//     type C = Container.Primitive
-//     val checkBox = new CheckBox
-//     val value = checkBox.selectedProperty.map(Value.Valid.apply)
-//     val status = Val(Status.Valid)
-//     def set(x: Boolean) = checkBox.setSelected(x)
-//     def clear() = checkBox.setSelected(false)
-//     def container(label: Option[String]) = Container.Primitive(this, label, checkBox)
+class BooleanRadiosEditorFactory(trueText: String, falseText: String)(using layouter: Layouter[Container.Primitive]) extends EditorFactory[Boolean]:
+  def createEditor = new Editor[Boolean]:
+    type C = Container.Primitive
+    val toggleGroup = new ToggleGroup
+    val trueRadioButton = new RadioButton(trueText) { setToggleGroup(toggleGroup) }
+    val falseRadioButton = new RadioButton(falseText) { setToggleGroup(toggleGroup) }
+    def get = trueRadioButton.isSelected
+    val value = (trueRadioButton.selectedProperty, falseRadioButton.selectedProperty).mapN: (isTrue, isFalse) =>
+      if isTrue then Value.Valid(true)
+      else if isFalse then Value.Valid(false)
+      else Value.Invalid(Nil)
+    val status = (trueRadioButton.selectedProperty, falseRadioButton.selectedProperty).mapN: (isTrue, isFalse) =>
+      if isTrue || isFalse then Status.Valid
+      else Status.Empty
+    def set(x: Boolean) = if x then trueRadioButton.setSelected(true) else falseRadioButton.setSelected(true)
+    def clear() = toggleGroup.selectToggle(null)
+    def container(label: Option[String]) = Container.Primitive(this, label, HBox(5, trueRadioButton, falseRadioButton))
 
 //  TODO could we do something like TextInputControlFactory?
 
