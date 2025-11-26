@@ -10,11 +10,6 @@ import org.sphix.ui.editor.*
 
 import demo.*
 
-case class Submission(
-  name: String,
-  age: Int,
-  files: List[File])
-
 object FilesDemo extends BorderPane with DemoUtils:
 
   val icons = Map(
@@ -26,6 +21,7 @@ object FilesDemo extends BorderPane with DemoUtils:
   val allFilesButton = new Button("All files")
   val onlyTxtButton = new Button("Only text files")
   val compositeButton = new Button("Composite")
+  val compositeMultipleButton = new Button("Composite multiple")
 
   allFilesButton.setOnAction: _ =>
     new EditorFactory.Files("All files", Nil, icons).toDialog("Please select some files").showAndWait().ifPresent(println)
@@ -34,9 +30,14 @@ object FilesDemo extends BorderPane with DemoUtils:
     new EditorFactory.Files("Text files", List("txt"), icons).toDialog("Please select some files").showAndWait().ifPresent(println)
 
   compositeButton.setOnAction: _ =>
-    given EditorFactory[List[File]] = EditorFactory.Files("All files", Nil, icons)
-    EditorDialog[Submission]("Enter your details").showAndWait().ifPresent(println)
+    (new SubmissionEditorFactory).toDialog("Enter your details").showAndWait().ifPresent(println)
 
-  val toolbar = new ToolBar(allFilesButton, onlyTxtButton, compositeButton)
+  compositeMultipleButton.setOnAction: _ =>
+    given EditorFactory[Submission] = new SubmissionEditorFactory
+    val factory = new DynamicEditorFactory[Submission](1)
+    factory.toDialog("Submissions").showAndWait().ifPresent(println)
+    
+
+  val toolbar = new ToolBar(allFilesButton, onlyTxtButton, compositeButton, compositeMultipleButton)
 
   setTop(toolbar)
