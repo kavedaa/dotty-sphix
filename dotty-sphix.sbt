@@ -2,7 +2,7 @@ name := "sphix"
 
 organization := "org.sphix"
 
-version := "1.21.13.87"
+version := "1.21.13.91"
 
 scalaVersion := "3.3.4"
 

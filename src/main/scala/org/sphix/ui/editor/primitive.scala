@@ -9,45 +9,56 @@ import org.sphix.*
 import org.sphix.control.*
 import org.sphix.control.ValueConverter
 
-class ValueEditorFactory[A](using converter: ValueConverter[A])(using Layouter[Container.Primitive]) extends EditorFactory[A]:
-  def createEditor = new Editor[A]:
-    type C = Container.Primitive
-    val valueField = new ValueField[A]
-    def get = valueField.getValue.get
-    val value = valueField.value
-    val status = valueField.value.map(_.status)
-    def set(x: A) = valueField.setValue(x)
-    def clear() = valueField.clear()
-    def container(label: Option[String]) = Container.Primitive(this, label, valueField)
+class ValueEditorFactory[A](using ValueConverter[A])(using Layouter[Container.Primitive]) extends EditorFactory[A]:
+  def createEditor = new ValueEditor[A]
+
+class ValueEditor[A](using converter: ValueConverter[A])(using Layouter[Container.Primitive])
+  extends Editor[A]:
+  type C = Container.Primitive
+  val valueField = new ValueField[A]
+  def get = valueField.getValue.get
+  val value = valueField.value
+  val status = valueField.value.map(_.status)
+  def set(x: A) = valueField.setValue(x)
+  def clear() = valueField.clear()
+  def container(label: Option[String]) = Container.Primitive(this, label, valueField)
+
 
 class CheckBoxEditorFactory(using Layouter[Container.Primitive]) extends EditorFactory[Boolean]:
-  def createEditor = new Editor[Boolean]:
-    type C = Container.Primitive
-    val checkBox = new CheckBox
-    def get = checkBox.isSelected
-    val value = checkBox.selectedProperty.map(Value.Valid.apply)
-    val status = Val(Status.Valid)
-    def set(x: Boolean) = checkBox.setSelected(x)
-    def clear() = checkBox.setSelected(false)
-    def container(label: Option[String]) = Container.Primitive(this, label, checkBox)
+  def createEditor = new CheckBoxEditor
+
+class CheckBoxEditor(using Layouter[Container.Primitive])
+  extends Editor[Boolean]:
+  type C = Container.Primitive
+  val checkBox = new CheckBox
+  def get = checkBox.isSelected
+  val value = checkBox.selectedProperty.map(Value.Valid.apply)
+  val status = Val(Status.Valid)
+  def set(x: Boolean) = checkBox.setSelected(x)
+  def clear() = checkBox.setSelected(false)
+  def container(label: Option[String]) = Container.Primitive(this, label, checkBox)
+
 
 class BooleanRadiosEditorFactory(trueText: String, falseText: String)(using layouter: Layouter[Container.Primitive]) extends EditorFactory[Boolean]:
-  def createEditor = new Editor[Boolean]:
-    type C = Container.Primitive
-    val toggleGroup = new ToggleGroup
-    val trueRadioButton = new RadioButton(trueText) { setToggleGroup(toggleGroup) }
-    val falseRadioButton = new RadioButton(falseText) { setToggleGroup(toggleGroup) }
-    def get = trueRadioButton.isSelected
-    val value = (trueRadioButton.selectedProperty, falseRadioButton.selectedProperty).mapN: (isTrue, isFalse) =>
-      if isTrue then Value.Valid(true)
-      else if isFalse then Value.Valid(false)
-      else Value.Invalid(Nil)
-    val status = (trueRadioButton.selectedProperty, falseRadioButton.selectedProperty).mapN: (isTrue, isFalse) =>
-      if isTrue || isFalse then Status.Valid
-      else Status.Empty
-    def set(x: Boolean) = if x then trueRadioButton.setSelected(true) else falseRadioButton.setSelected(true)
-    def clear() = toggleGroup.selectToggle(null)
-    def container(label: Option[String]) = Container.Primitive(this, label, HBox(5, trueRadioButton, falseRadioButton))
+  def createEditor = new BooleanRadiosEditor(trueText, falseText)
+
+class BooleanRadiosEditor(trueText: String, falseText: String)(using layouter: Layouter[Container.Primitive])
+  extends Editor[Boolean]:
+  type C = Container.Primitive
+  val toggleGroup = new ToggleGroup
+  val trueRadioButton = new RadioButton(trueText) { setToggleGroup(toggleGroup) }
+  val falseRadioButton = new RadioButton(falseText) { setToggleGroup(toggleGroup) }
+  def get = trueRadioButton.isSelected
+  val value = (trueRadioButton.selectedProperty, falseRadioButton.selectedProperty).mapN: (isTrue, isFalse) =>
+    if isTrue then Value.Valid(true)
+    else if isFalse then Value.Valid(false)
+    else Value.Invalid(Nil)
+  val status = (trueRadioButton.selectedProperty, falseRadioButton.selectedProperty).mapN: (isTrue, isFalse) =>
+    if isTrue || isFalse then Status.Valid
+    else Status.Empty
+  def set(x: Boolean) = if x then trueRadioButton.setSelected(true) else falseRadioButton.setSelected(true)
+  def clear() = toggleGroup.selectToggle(null)
+  def container(label: Option[String]) = Container.Primitive(this, label, HBox(5, trueRadioButton, falseRadioButton))
 
 //  TODO could we do something like TextInputControlFactory?
 
@@ -62,16 +73,19 @@ class TextFieldEditorFactory[A](using converter: ValueConverter[A])(using Layout
     def clear() = textField.clear()
     def container(label: Option[String]) = Container.Primitive(this, label, textField)
 
-class TextAreaEditorFactory[A](using converter: ValueConverter[A])(using Layouter[Container.Primitive]) extends EditorFactory[A]:
-  def createEditor = new Editor[A]:
-    type C = Container.Primitive
-    val textArea = new TextArea
-    def get = converter.deconvert(textArea.getText).get
-    val value = textArea.textProperty.map(converter.deconvert)
-    val status = value.map(_.status)
-    def set(x: A) = textArea.setText(converter.convert(x))
-    def clear() = textArea.clear()
-    def container(label: Option[String]) = Container.Primitive(this, label, textArea)
+class TextAreaEditorFactory[A](using ValueConverter[A])(using Layouter[Container.Primitive]) extends EditorFactory[A]:
+  def createEditor = new TextAreaEditor
+    
+class TextAreaEditor[A](using converter: ValueConverter[A])(using Layouter[Container.Primitive])
+  extends Editor[A]:
+  type C = Container.Primitive
+  val textArea = new TextArea
+  def get = converter.deconvert(textArea.getText).get
+  val value = textArea.textProperty.map(converter.deconvert)
+  val status = value.map(_.status)
+  def set(x: A) = textArea.setText(converter.convert(x))
+  def clear() = textArea.clear()
+  def container(label: Option[String]) = Container.Primitive(this, label, textArea)
 
 class DatePickerEditorFactory(using Layouter[Container.Primitive]) extends EditorFactory[LocalDate]:
   def createEditor = new Editor[LocalDate]:

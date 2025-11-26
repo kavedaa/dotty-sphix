@@ -104,3 +104,21 @@ class ComboBoxEditorFactory[A](items: => Iterable[A])(using comboBoxFactory: Com
     def clear() = comboBox.getSelectionModel.clearSelection()
     def container(label: Option[String]) = Container.Primitive(this, label, comboBox)
 
+
+class ComboBoxOptionEditorFactory[A](items: => Iterable[A])(using comboBoxFactory: ComboBoxFactory[A])(using Layouter[Container.Primitive]) 
+  extends EditorFactory[Option[A]]:
+  def createEditor = new Editor[Option[A]]:
+    type C = Container.Primitive
+    val comboBox = comboBoxFactory.create()
+    comboBox.setMaxWidth(Int.MaxValue)
+    comboBox.setItems(ObservableSeq.from(items))
+    comboBox.setConverter(comboBoxFactory.stringConverter)
+    def get = Option(comboBox.getSelectionModel.getSelectedItem)
+    val value = comboBox.getSelectionModel.selectedItemProperty.mapOption.map(Value.Valid(_))
+    val status = Val(Status.Valid)
+    def set(x: Option[A]) = x match
+      case Some(value) => comboBox.getSelectionModel.select(value)
+      case None => clear()
+    def clear() = comboBox.getSelectionModel.clearSelection()
+    def container(label: Option[String]) = Container.Primitive(this, label, comboBox)
+

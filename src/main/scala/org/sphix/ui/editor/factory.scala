@@ -52,7 +52,7 @@ object EditorFactory:
 
   given (using Layouter[Container.Primitive]): EditorFactory[String] = new TextFieldEditorFactory
   given (using Layouter[Container.Primitive]): EditorFactory[LocalDate] = new DatePickerEditorFactory
-//  given (using Layouter[Container.Primitive[Option[LocalDate]], Option[LocalDate]]): EditorFactory[Option[LocalDate]] = new DatePickerOptionEditorFactory
+  given (using Layouter[Container.Primitive]): EditorFactory[Option[LocalDate]] = new DatePickerOptionEditorFactory
 
   given [A] (using converter: ValueConverter[A])(using Layouter[Container.Primitive]): EditorFactory[A] = new ValueEditorFactory
 
@@ -72,6 +72,7 @@ object EditorFactory:
   export org.sphix.ui.editor.ListViewItemEditorFactory as ListViewItem
   export org.sphix.ui.editor.RadioItemEditorFactory as RadioItem
   export org.sphix.ui.editor.ComboBoxEditorFactory as ComboBox
+  export org.sphix.ui.editor.ComboBoxOptionEditorFactory as ComboBoxOption
   export org.sphix.ui.editor.FilesEditorFactory as Files
   
 end EditorFactory

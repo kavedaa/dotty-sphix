@@ -56,7 +56,6 @@ object Layouter:
         val node = primitive.node
         node.getStyleClass.add(StyleClassName)
         primitive.editor.status.onValue: status => 
-          println(status)
           updateStatus(node, status)
         updateStatus(node, primitive.editor.status())
         node match
