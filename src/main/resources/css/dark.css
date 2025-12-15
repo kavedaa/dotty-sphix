@@ -1,7 +1,6 @@
 .root { 
     -fx-base: #1e1e1e;
     -fx-control-inner-background: derive(-fx-base, 10%);
-    -fx-background-color: red;
 }
 
 .label {

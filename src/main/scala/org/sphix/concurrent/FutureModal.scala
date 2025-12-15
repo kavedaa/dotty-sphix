@@ -147,7 +147,7 @@ trait ModalFactory:
 
 object ModalFactory:
 
-  given ModalFactory = Spinner
+  given default: ModalFactory = Spinner
 
   object Spinner extends ModalFactory:
     def create(title: Option[String], info0: Option[String]) = new SpinnerModal(title, info0)
@@ -196,13 +196,16 @@ class SpinnerModal(title: Option[String], info0: Option[String]) extends Spinner
     
   spinner.setPrefSize(75, 75)
 
-  val vb = new VBox(10):
+  val background = new Region:
+    setPrefSize(150, 150)
+    setStyle("-fx-background-color: -fx-control-inner-background; -fx-background-radius: 10;")
+
+  val content = new VBox(10):
     setAlignment(Pos.CENTER)
-    getStyleClass.add(".root")
     getChildren.addAll(titleLabel, spinner, infoLabel)
 
-  root.getChildren.addAll(vb)
-
+  root.getChildren.addAll(background, content)
+  
   title.foreach(titleLabel.setText)
   info0.foreach(infoLabel.setText)
 

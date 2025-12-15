@@ -14,6 +14,7 @@ import javafx.scene.layout.*
 import no.vedaadata.generator.Generator
 
 import org.sphix.* 
+import org.sphix.control.Spring
 import org.sphix.collection.ObservableSeq
 import org.sphix.control.given
 import org.sphix.concurrent.FutureModal
@@ -42,7 +43,15 @@ class Demo extends Application:
     val showSpinner = new Button("Spinner")
     val showTextArea = new Button("Text area")
 
-    val toolbar = new ToolBar(showSpinner, showTextArea)
+    val darkMode = new ToggleButton("Light/dark")
+
+    darkMode.selectedProperty.onValue: isDark =>
+      if isDark then
+        StyleManager.getInstance.addUserAgentStylesheet("css/dark.css")
+      else
+        StyleManager.getInstance.removeUserAgentStylesheet("css/dark.css")
+
+    val toolbar = new ToolBar(showSpinner, showTextArea, new Spring, darkMode)
 
     val table = summon[TableView[Person]]
     table.setItems(persons)
@@ -55,15 +64,13 @@ class Demo extends Application:
     stage.setScene(Scene(pane))
     stage.show()
 
-//    val stylesheet = getClass.getResource("dark.css").toExternalForm
-    StyleManager.getInstance.addUserAgentStylesheet("css/dark.css")
-
     showSpinner.setOnAction: _ =>
       FutureModal("Please wait...")(Thread.sleep(2000)).onComplete(_ => ())
 
     showTextArea.setOnAction: _ =>
       EditorFactory.TextArea[String].toDialog.withInitialValue("Hello world!").showAndWait()
 
+    darkMode.setSelected(true)
 
 
 @main def main = Application.launch(classOf[Demo])
