@@ -32,7 +32,7 @@ trait TooltipCell[T, A] extends Cell[T]:
       case None =>
         setTooltip(null)
 
-trait ProgressBarCell[T, A] extends DoubleDataCell[T, A]:
+trait ProgressBarCell[T] extends DataCell[T, Double]:
   def min: Double
   def max: Double
   lazy val progressBar = new ProgressBar

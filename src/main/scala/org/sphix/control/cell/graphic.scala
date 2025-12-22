@@ -18,13 +18,13 @@ trait StaticImageCell[T] extends GraphicCell[T]:
   imageView.setImage(image)
   def graphic(x: T) = Some(imageView)
 
-trait BooleanGraphicCell[T, A] extends BooleanDataCell[T, A] with GraphicCell[T]:
+trait BooleanGraphicCell[T] extends DataCell[T, Boolean] with GraphicCell[T]:
   def booleanGraphic: Node
   def graphic(x: T) = dataValue(x) match
     case Some(true) => Some(booleanGraphic)
     case _ => None
 
-trait BooleanImageCell[T, A] extends BooleanDataCell[T, A]:
+trait BooleanImageCell[T] extends DataCell[T, Boolean]:
   def trueImage: Option[Image]
   def falseImage: Option[Image]
   val imageView = new ImageView

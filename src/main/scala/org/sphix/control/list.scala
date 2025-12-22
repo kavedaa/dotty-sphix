@@ -19,50 +19,50 @@ trait ListCells[T]:
 
   def TextCell(text: T => String) = new TextCell(x => Some(text(x))) {}
 
-  trait BooleanTextCell[A](val trueText: Option[String], val falseText: Option[String])(using val toData: To[T, A])(using val asDataOption: AsOption[A, Boolean]) extends ListCell[T] with cell.BooleanTextCell[T, A]
+  trait BooleanTextCell[A](val trueText: Option[String], val falseText: Option[String])(using val toData: To[T, A])(using val asDataOption: AsOption[A, Boolean]) extends ListCell[T] with cell.BooleanTextCell[T]
 
   trait StripNewLines extends cell.StripNewLines[T]
 
   //  Primitive
 
-  trait StringCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, String]) extends ListCell[T] with cell.StringCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait StringCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, String]) extends ListCell[T] with cell.StringCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait BooleanCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Boolean]) extends ListCell[T] with cell.BooleanCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait BooleanCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Boolean]) extends ListCell[T] with cell.BooleanCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait ByteCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Byte])(using val format: Format.ByteFormat) extends ListCell[T] with cell.ByteCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait ByteCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Byte])(using val format: Format.ByteFormat) extends ListCell[T] with cell.ByteCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait ShortCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Short])(using val format: Format.ShortFormat) extends ListCell[T] with cell.ShortCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait ShortCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Short])(using val format: Format.ShortFormat) extends ListCell[T] with cell.ShortCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait IntCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Int])(using val format: Format.IntFormat) extends ListCell[T] with cell.IntCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait IntCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Int])(using val format: Format.IntFormat) extends ListCell[T] with cell.IntCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait LongCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Long])(using val format: Format.LongFormat) extends ListCell[T] with cell.LongCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait LongCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Long])(using val format: Format.LongFormat) extends ListCell[T] with cell.LongCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait FloatCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Float])(using val format: Format.FloatFormat) extends ListCell[T] with cell.FloatCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait FloatCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Float])(using val format: Format.FloatFormat) extends ListCell[T] with cell.FloatCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait DoubleCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Double])(using val format: Format.DoubleFormat) extends ListCell[T] with cell.DoubleCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait DoubleCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Double])(using val format: Format.DoubleFormat) extends ListCell[T] with cell.DoubleCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait BigIntCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, BigInt])(using val format: Format.BigIntFormat) extends ListCell[T] with cell.BigIntCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait BigIntCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, BigInt])(using val format: Format.BigIntFormat) extends ListCell[T] with cell.BigIntCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait BigDecimalCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, BigDecimal])(using val format: Format.BigDecimalFormat) extends ListCell[T] with cell.BigDecimalCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait BigDecimalCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, BigDecimal])(using val format: Format.BigDecimalFormat) extends ListCell[T] with cell.BigDecimalCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait LocalDateCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, LocalDate])(using val formatter: Format.DateFormatter) extends ListCell[T] with cell.LocalDateCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait LocalDateCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, LocalDate])(using val formatter: Format.DateFormatter) extends ListCell[T] with cell.LocalDateCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait LocalTimeCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, LocalTime])(using val formatter: Format.TimeFormatter) extends ListCell[T] with cell.LocalTimeCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait LocalTimeCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, LocalTime])(using val formatter: Format.TimeFormatter) extends ListCell[T] with cell.LocalTimeCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait LocalDateTimeCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, LocalDateTime])(using val formatter: Format.DateTimeFormatter) extends ListCell[T] with cell.LocalDateTimeCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait LocalDateTimeCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, LocalDateTime])(using val formatter: Format.DateTimeFormatter) extends ListCell[T] with cell.LocalDateTimeCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
   //  Graphic
 
@@ -86,7 +86,7 @@ trait ListCells[T]:
 
   trait TooltipCell[A](using val toTooltipText: To[T, A])(using val asTooltipTextOption: AsOption[A, String]) extends ListCell[T] with cell.TooltipCell[T, A]
 
-  trait ProgressBarCell[A](val min: Double, val max: Double)(using val toData: To[T, A])(using val asOption: AsOption[A, Double]) extends ListCell[T] with cell.ProgressBarCell[T, A]
+  trait ProgressBarCell[A](val min: Double, val max: Double)(using val toData: To[T, A])(using val asOption: AsOption[A, Double]) extends ListCell[T] with cell.ProgressBarCell[T]
 
   trait WebViewCell[A](using val toUrl: To[T, A])(using val asUrlOption: AsOption[A, String]) extends ListCell[T] with cell.WebViewCell[T, A]
 

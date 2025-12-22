@@ -103,9 +103,14 @@ class PersonTable extends TableView[PersonModel] with TableUtils[PersonModel]:
 
 class EditingDemo(using Window) extends TabPane:
 
+  val textFieldDemoTab = new Tab("Textfield"):
+    val textFieldDemo = new demo.table.editing.textfield.TextFieldDemo
+    setContent(textFieldDemo.pane)
+    setClosable(false)
+
   val comboBoxDemoTab = new Tab("ComboBox"):
     val comboBoxDemo = new demo.table.editing.combobox.ComboBoxDemo
     setContent(comboBoxDemo.pane)
     setClosable(false)
 
-  getTabs.addAll(comboBoxDemoTab)
+  getTabs.addAll(textFieldDemoTab, comboBoxDemoTab)

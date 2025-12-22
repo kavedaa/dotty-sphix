@@ -26,46 +26,50 @@ import java.util.Comparator
 
 trait TableColumnCells[S, T]:
 
+  //   Data
+
+  trait StringDataCell[A]
+
   //  Primitive
 
-  trait StringCell[A](using val toData: To[T, A])(using asOption: AsOption[A, String]) extends TableCell[S, T] with cell.StringCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait StringCell[A](using val toData: To[T, A])(using asOption: AsOption[A, String]) extends TableCell[S, T] with cell.StringCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait BooleanCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Boolean]) extends TableCell[S, T] with cell.BooleanCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait BooleanCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Boolean]) extends TableCell[S, T] with cell.BooleanCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait ByteCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Byte])(using val format: Format.ByteFormat) extends TableCell[S, T] with cell.ByteCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait ByteCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Byte])(using val format: Format.ByteFormat) extends TableCell[S, T] with cell.ByteCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
   
-  trait ShortCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Short])(using val format: Format.ShortFormat) extends TableCell[S, T] with cell.ShortCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait ShortCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Short])(using val format: Format.ShortFormat) extends TableCell[S, T] with cell.ShortCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait IntCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Int])(using val format: Format.IntFormat) extends TableCell[S, T] with cell.IntCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait IntCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Int])(using val format: Format.IntFormat) extends TableCell[S, T] with cell.IntCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait LongCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Long])(using val format: Format.LongFormat) extends TableCell[S, T] with cell.LongCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait LongCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Long])(using val format: Format.LongFormat) extends TableCell[S, T] with cell.LongCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait FloatCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Float])(using val format: Format.FloatFormat) extends TableCell[S, T] with cell.FloatCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait FloatCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Float])(using val format: Format.FloatFormat) extends TableCell[S, T] with cell.FloatCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait DoubleCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Double])(using val format: Format.DoubleFormat) extends TableCell[S, T] with cell.DoubleCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait DoubleCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, Double])(using val format: Format.DoubleFormat) extends TableCell[S, T] with cell.DoubleCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait BigIntCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, BigInt])(using val format: Format.BigIntFormat) extends TableCell[S, T] with cell.BigIntCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait BigIntCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, BigInt])(using val format: Format.BigIntFormat) extends TableCell[S, T] with cell.BigIntCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
   
-  trait BigDecimalCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, BigDecimal])(using val format: Format.BigDecimalFormat) extends TableCell[S, T] with cell.BigDecimalCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait BigDecimalCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, BigDecimal])(using val format: Format.BigDecimalFormat) extends TableCell[S, T] with cell.BigDecimalCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
   
-  trait LocalDateCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, LocalDate])(using val formatter: Format.DateFormatter) extends TableCell[S, T] with cell.LocalDateCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait LocalDateCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, LocalDate])(using val formatter: Format.DateFormatter) extends TableCell[S, T] with cell.LocalDateCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait LocalTimeCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, LocalTime])(using val formatter: Format.TimeFormatter) extends TableCell[S, T] with cell.LocalTimeCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait LocalTimeCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, LocalTime])(using val formatter: Format.TimeFormatter) extends TableCell[S, T] with cell.LocalTimeCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait LocalDateTimeCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, LocalDateTime])(using val formatter: Format.DateTimeFormatter) extends TableCell[S, T] with cell.LocalDateTimeCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait LocalDateTimeCell[A](using val toData: To[T, A])(using val asOption: AsOption[A, LocalDateTime])(using val formatter: Format.DateTimeFormatter) extends TableCell[S, T] with cell.LocalDateTimeCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
   //  convenience for backwards comp. consider if to keep
   def LocalDateCell(using formatter: Format.DateFormatter)(using AsOption[T, LocalDate]) = new LocalDateCell {}
@@ -83,8 +87,8 @@ trait TableColumnCells[S, T]:
 
   def TextCell(text: T => String) = new TextCell(x => Some(text(x))) {}
 
-  trait BooleanTextCell[A](val trueText: Option[String], val falseText: Option[String])(using toData: To[T, A])(using asOption: AsOption[A, Boolean]) extends TableCell[S, T] with cell.BooleanTextCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait BooleanTextCell[A](val trueText: Option[String], val falseText: Option[String])(using toData: To[T, A])(using asOption: AsOption[A, Boolean]) extends TableCell[S, T] with cell.BooleanTextCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
   def BooleanTextCell[A](trueText: Option[String], falseText: Option[String])(using To[T, A])(using AsOption[A, Boolean]) = new BooleanTextCell[A](trueText, falseText) {}
   def BooleanTextCell[A](trueText: String, falseText: String)(using To[T, A])(using AsOption[A, Boolean]) = new BooleanTextCell[A](Some(trueText), Some(falseText)) {}
@@ -102,11 +106,11 @@ trait TableColumnCells[S, T]:
 
   trait StaticImageCell(val image: Image) extends TableCell[S, T] with cell.StaticImageCell[T]
 
-  trait BooleanGraphicCell[A](val booleanGraphic: Node)(using toData: To[T, A])(using asOption: AsOption[A, Boolean]) extends TableCell[S, T] with cell.BooleanGraphicCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait BooleanGraphicCell[A](val booleanGraphic: Node)(using toData: To[T, A])(using asOption: AsOption[A, Boolean]) extends TableCell[S, T] with cell.BooleanGraphicCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
-  trait BooleanImageCell[A](val trueImage: Option[Image] = None, val falseImage: Option[Image] = None)(using toData: To[T, A])(using asOption: AsOption[A, Boolean]) extends TableCell[S, T] with cell.BooleanImageCell[T, A]:
-    override def toDataOption(x: T) = asOption(toData(x))
+  trait BooleanImageCell[A](val trueImage: Option[Image] = None, val falseImage: Option[Image] = None)(using toData: To[T, A])(using asOption: AsOption[A, Boolean]) extends TableCell[S, T] with cell.BooleanImageCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
 
   def BooleanImageCell[A](trueImage: Option[Image], falseImage: Option[Image] = None)(using To[T, A])(using AsOption[A, Boolean]) = new BooleanImageCell(trueImage, falseImage) {}
   def BooleanImageCell[A](trueImage: Image, falseImage: Image)(using To[T, A])(using AsOption[A, Boolean]) = new BooleanImageCell(Some(trueImage), Some(falseImage)) {}
@@ -124,8 +128,8 @@ trait TableColumnCells[S, T]:
 
   trait TooltipCell[A](using val toTooltipText: To[T, A])(using val asTooltipTextOption: AsOption[A, String]) extends TableCell[S, T] with cell.TooltipCell[T, A]
 
-  trait ProgressBarCell[A](val min: Double, val max: Double)(using to: To[T, A])(using asOption: AsOption[A, Double]) extends TableCell[S, T] with cell.ProgressBarCell[T, A]:
-    def toDataOption(x: T) = asOption(to(x))
+  trait ProgressBarCell[A](val min: Double, val max: Double)(using to: To[T, A])(using asOption: AsOption[A, Double]) extends TableCell[S, T] with cell.ProgressBarCell[T]:
+    def dataValue(x: T) = asOption(to(x))
 
 
   trait WebViewCell[A](using val toUrl: To[T, A])(using val asUrlOption: AsOption[A, String]) extends TableCell[S, T] with cell.WebViewCell[T, A]
@@ -162,13 +166,14 @@ trait TableColumnCells[S, T]:
 
   //  Editables
 
-  trait TextFieldCell(using val converter: RightConverter[T, String]) extends cell.TextFieldTableCell[S, T]
+  trait TextFieldCell[D](using asDataOption: AsOption[T, D])(using val converter: Converter[T, String]) extends cell.TextFieldTableCell[S, T, D]:
+    def dataValue(x: T) = asDataOption(x)
 
   trait CheckBoxCellA extends TableCell[S, Boolean] with cell.CheckBoxCell
 
   //  for backwards comp.
-  object TextFieldCell:
-    def apply(converter0: RightConverter[T, String]) = new TextFieldCell(using converter0) {}
+  // object TextFieldCell:
+  //   def apply(converter0: Converter[T, String]) = new TextFieldCell(using converter0) {}
 
   trait CheckBoxCell(f0: S => Property[Boolean]) extends cell.CheckBoxTableCell[S]:
     def f(s: S) = f0(s)
@@ -214,7 +219,7 @@ trait TableColumnCells[S, T]:
     }
   }
 
-  trait ValueFieldCell(using ValueConverter[T]) extends cell.TextFieldTableCell[S, T]
+//  trait ValueFieldCell(using ValueConverter[T]) extends cell.TextFieldTableCell[S, T]
 
 
 trait TableUtils[S]:

@@ -24,11 +24,13 @@ object HalfConverter:
         def fromString(x: String) = ???
         def toString(x: A) = if x != null then converter.convert(x).map(ev).getOrElse("") else null
 
+end HalfConverter
+
 
 trait Converter[A, B] extends HalfConverter[A, B]:
   def deconvert(x: B): Option[A]
 
-object Converter:
+object Converter extends Converters:
 
   def apply[A, B](using converter: Converter[A, B]): Converter[A, B] = converter
 
@@ -37,9 +39,9 @@ object Converter:
       def convert(x: A) = Some(f(x))
       def deconvert(x: B) = Some(g(x))
 
-  given [A, B](using f: A => B, g: B => A): Converter[A, B] = apply(f, g)
+  given from[A, B](using f: A => B, g: B => A): Converter[A, B] = apply(f, g)
 
-  given [A, B](using inner: Converter[A, B]): Converter[Option[A], B] = 
+  given option[A, B](using inner: Converter[A, B]): Converter[Option[A], B] = 
     new Converter:
       def convert(x: Option[A]) = x.flatMap(inner.convert)
       def deconvert(x: B) = Some(inner.deconvert(x))
@@ -61,7 +63,7 @@ object Converter:
         def fromString(x: String) = converter.deconvert(ev.flip(x)).orNull
         def toString(x: A) = if x != null then converter.convert(x).map(ev).getOrElse("") else null
 
-
+end Converter
 
 
 // for backwards comp.

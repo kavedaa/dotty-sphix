@@ -2,40 +2,36 @@ package org.sphix.control.cell
 
 import javafx.scene.control.*
 import javafx.event.EventHandler
-import javafx.scene.input.KeyEvent
-import javafx.scene.input.KeyCode
-import javafx.scene.input.KeyCodeCombination
+import javafx.scene.input.*
 
-import org.sphix.util.RightConverter
+import org.sphix.util.*
 
-trait TextFieldTableCell[S, T] extends TableCell[S, T] { cell =>
+trait TextFieldTableCell[S, T, D] extends TableCell[S, T] with DataCell[T, D]:
+  
+  cell =>
 
-  def converter: RightConverter[T, String]
+  def converter: Converter[T, String]
 
-  lazy val textField = new TextField {
-
-    setOnKeyPressed(new EventHandler[KeyEvent] {
-      def handle(t: KeyEvent) = {
-        t match {
-          case t if new KeyCodeCombination(KeyCode.ENTER) `match` t =>
-            converter deconvert getText map commitEdit
-            t.consume()
-          case t if new KeyCodeCombination(KeyCode.ESCAPE) `match` t => cell.cancelEdit()
-          case _ =>
-        }
-      }
-    })
-  }
+  lazy val textField = new TextField:
+    setOnKeyPressed:
+      new EventHandler[KeyEvent]:
+        def handle(event: KeyEvent) =
+          event match 
+            case t if new KeyCodeCombination(KeyCode.ENTER) `match` t =>
+              Option(getText).flatMap(converter.deconvert).foreach(commitEdit)
+              t.consume()
+            case t if new KeyCodeCombination(KeyCode.ESCAPE) `match` t => 
+              cell.cancelEdit()
+            case _ =>
 
   override def startEdit() =
-    if (isEditable && getTableView.isEditable) {
+    if isEditable && getTableView.isEditable then
       super.startEdit()
-      textField setText (converter convert getItem)
+      textField.setText(converter.convert(getItem).orNull)
       setText(null)
       setGraphic(textField)
       textField.requestFocus()
       textField.selectAll()
-    }
 
   override def commitEdit(value: T) =
     super.commitEdit(value)
@@ -44,7 +40,7 @@ trait TextFieldTableCell[S, T] extends TableCell[S, T] { cell =>
 
   override def cancelEdit() =
     super.cancelEdit()
-    setText(converter convert getItem)
+    setText(converter.convert(getItem).orNull)
     setGraphic(null)
 
   override def updateItem(item: T, empty: Boolean) =
@@ -56,26 +52,17 @@ trait TextFieldTableCell[S, T] extends TableCell[S, T] { cell =>
     else {
       if (isEditing()) {
         if (textField != null) {
-          textField setText (converter convert getItem)
+          textField setText converter.convert(getItem).orNull
         }
         setText(null)
         setGraphic(textField)
       }
       else {
-        setText(converter convert getItem)
+        setText(converter.convert(getItem).orNull)
         setGraphic(null)
       }
     }
-  }
 
-// object TextFieldTableCell {
-//   def apply[S, T](converter0: RightConverter[T, String] = new DefaultConverter[String]) =
-//     new Callback[TableColumn[S, T], TableCell[S, T]] {
-//       def call(c: TableColumn[S, T]) = new TextFieldTableCell[S, T] {
-//         def converter = converter0
-//       }
-//     }
-// }
 
 
 trait TextFieldListCell[T] extends ListCell[T] { cell =>

@@ -115,6 +115,7 @@ object TableExcel:
                   case x: LocalDate => createCell(columnData.index, x)
                   case x: LocalTime => createCell(columnData.index, x)
                   case x: LocalDateTime => createCell(columnData.index, x)
+                  case null => createCell(columnData.index, "null")
                   case _ => createCell(columnData.index, "unsupported data type")                
             case Failure(ex) => createCell(columnData.index, ex.getMessage)                        
 
@@ -134,7 +135,7 @@ object TableExcel:
     index: Int,
     title: String,
     tableCellValueFactory: Callback[TableColumn.CellDataFeatures[Any, Any], ObservableValue[Any]],
-    dataCell: Try[DataCell[Any, Any, Any]],
+    dataCell: Try[DataCell[Any, Any]],
     cellStyle: CellStyle,
     width: Double)
 
@@ -147,7 +148,7 @@ object TableExcel:
           tableCellValueFactory <- Option(column.getCellValueFactory)
           tableCellFactory <- Option(column.getCellFactory)
           dataCell = tableCellFactory.call(column) match
-            case dataCell: DataCell[?, ?, ?] => Success(dataCell.asInstanceOf[DataCell[Any, Any, Any]])
+            case dataCell: DataCell[?, ?] => Success(dataCell.asInstanceOf[DataCell[Any, Any]])
             case _ => Failure(new Exception("not a data cell"))        
           cellStyle = dataCell.map(_.dataType).map(getCellStyleProvider).getOrElse(CellStyleProvider.default).provide(baseCellStyle)
         yield ColumnData(

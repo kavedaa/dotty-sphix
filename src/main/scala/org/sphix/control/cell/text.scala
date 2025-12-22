@@ -1,6 +1,6 @@
 package org.sphix.control.cell
 
-trait BooleanTextCell[T, A] extends BooleanDataCell[T, A] with TextCell[T]:
+trait BooleanTextCell[T] extends DataCell[T, Boolean] with TextCell[T]:
   def trueText: Option[String]
   def falseText: Option[String]
   def text(x: T) = dataValue(x) match

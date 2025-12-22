@@ -6,46 +6,89 @@ import java.time._
 enum DataType:
   case boolean, string, byte, short, int, long, float, double, bigInt, bigDecimal, localDate, localTime, localDateTime
 
-trait DataCell[T, A, D] extends Cell[T]:
+trait DataCell[T, D](using dataTypeProvider: DataTypeProvider[D]) extends Cell[T]:
+  def dataType: DataType = dataTypeProvider.dataType
+  def dataValue(x: T): Option[D]
+
+trait DataTypeProvider[T]:
   def dataType: DataType
-  def toDataOption(x: T): Option[D]
-  def dataValue(x: T) = toDataOption(x)
 
-trait StringDataCell[T, A] extends DataCell[T, A, String]:
-  def dataType = DataType.string
+object DataTypeProvider:
+  
+  given DataTypeProvider[String] with
+    def dataType = DataType.string
 
-trait BooleanDataCell[T, A] extends DataCell[T, A, Boolean]:
-  def dataType = DataType.boolean
+  given DataTypeProvider[Boolean] with
+    def dataType = DataType.boolean
 
-trait ByteDataCell[T, A] extends DataCell[T, A, Byte]:
-  def dataType = DataType.byte
+  given DataTypeProvider[Byte] with
+    def dataType = DataType.byte
 
-trait ShortDataCell[T, A] extends DataCell[T, A, Short]:
-  def dataType = DataType.short
+  given DataTypeProvider[Short] with
+    def dataType = DataType.short
 
-trait IntDataCell[T, A] extends DataCell[T, A, Int]:
-  def dataType = DataType.int
+  given DataTypeProvider[Int] with
+    def dataType = DataType.int
 
-trait LongDataCell[T, A] extends DataCell[T, A, Long]:
-  def dataType = DataType.long
+  given DataTypeProvider[Long] with
+    def dataType = DataType.long
 
-trait FloatDataCell[T, A] extends DataCell[T, A, Float]:
-  def dataType = DataType.float
+  given DataTypeProvider[Float] with
+    def dataType = DataType.float
 
-trait DoubleDataCell[T, A] extends DataCell[T, A, Double]:
-  def dataType = DataType.double
+  given DataTypeProvider[Double] with
+    def dataType = DataType.double
 
-trait BigIntDataCell[T, A] extends DataCell[T, A, BigInt]:
-  def dataType = DataType.bigInt
+  given DataTypeProvider[BigInt] with
+    def dataType = DataType.bigInt
 
-trait BigDecimalDataCell[T, A] extends DataCell[T, A, BigDecimal]:
-  def dataType = DataType.bigDecimal
+  given DataTypeProvider[BigDecimal] with
+    def dataType = DataType.bigDecimal
 
-trait LocalDateDataCell[T, A] extends DataCell[T, A, LocalDate]:
-  def dataType = DataType.localDate
+  given DataTypeProvider[LocalDate] with
+    def dataType = DataType.localDate
 
-trait LocalTimeDataCell[T, A] extends DataCell[T, A, LocalTime]:
-  def dataType = DataType.localTime
+  given DataTypeProvider[LocalTime] with
+    def dataType = DataType.localTime
 
-trait LocalDateTimeDataCell[T, A] extends DataCell[T, A, LocalDateTime]:
-  def dataType = DataType.localDateTime
+  given DataTypeProvider[LocalDateTime] with
+    def dataType = DataType.localDateTime
+
+// trait StringDataCell[T] extends DataCell[T, String]:
+//   def dataType = DataType.string
+
+// trait BooleanDataCell[T] extends DataCell[T, Boolean]:
+//   def dataType = DataType.boolean
+
+// trait ByteDataCell[T] extends DataCell[T, Byte]:
+//   def dataType = DataType.byte
+
+// trait ShortDataCell[T] extends DataCell[T, Short]:
+//   def dataType = DataType.short
+
+// trait IntDataCell[T] extends DataCell[T, Int]:
+//   def dataType = DataType.int
+
+// trait LongDataCell[T] extends DataCell[T, Long]:
+//   def dataType = DataType.long
+
+// trait FloatDataCell[T] extends DataCell[T, Float]:
+//   def dataType = DataType.float
+
+// trait DoubleDataCell[T] extends DataCell[T, Double]:
+//   def dataType = DataType.double
+
+// trait BigIntDataCell[T] extends DataCell[T, BigInt]:
+//   def dataType = DataType.bigInt
+
+// trait BigDecimalDataCell[T] extends DataCell[T, BigDecimal]:
+//   def dataType = DataType.bigDecimal
+
+// trait LocalDateDataCell[T] extends DataCell[T, LocalDate]:
+//   def dataType = DataType.localDate
+
+// trait LocalTimeDataCell[T] extends DataCell[T, LocalTime]:
+//   def dataType = DataType.localTime
+
+// trait LocalDateTimeDataCell[T] extends DataCell[T, LocalDateTime]:
+//   def dataType = DataType.localDateTime

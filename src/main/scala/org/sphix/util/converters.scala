@@ -6,6 +6,20 @@ import scala.util.Try
 import java.text.DateFormat
 import java.text.DecimalFormat
 
+trait Converters:
+
+  given int: Converter[Int, String] with
+    def convert(a: Int) = Some(a.toString)
+    def deconvert(b: String) = Try(b.toInt).toOption
+
+  given long: Converter[Long, String] with
+    def convert(a: Long) = Some(a.toString)
+    def deconvert(b: String) = Try(b.toLong).toOption
+
+
+//  for backwards comp.
+
+
 class DefaultConverter[T] extends RightConverter[T, T] {
   def convert(a: T) = a
   def deconvert(b: T) = Some(b)
