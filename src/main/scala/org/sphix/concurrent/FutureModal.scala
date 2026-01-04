@@ -167,22 +167,27 @@ abstract class ModalStyleBase extends Modal:
     setBackground(Background.fill(Color.TRANSPARENT))
     setEffect(new DropShadow)
 
+  val background = new Region:
+    setPrefSize(150, 150)
+    setStyle("-fx-background-color: -fx-control-inner-background; -fx-background-radius: 10;")
+
+  root.getChildren.add(background)
+
   val scene = new Scene(root, Color.TRANSPARENT)
   setScene(scene)
 
   setResizable(false)  
 
+trait ProgressModalBase:
 
-abstract class SpinnerModalBase extends ModalStyleBase:
-
-  protected val spinner = new ProgressIndicator
+  protected def setProgress(x: Double): Unit
 
   protected val titleLabel = new Label
   protected val infoLabel = new Label
 
   def updateProgress(x: Double): Unit =
     Platform.runLater: () =>
-      spinner.setProgress(x)
+      setProgress(x)
 
   def updateProgress(index: Long, total: Long): Unit =
     updateProgress(index.toDouble / total)
@@ -192,51 +197,38 @@ abstract class SpinnerModalBase extends ModalStyleBase:
       infoLabel.setText(x)
 
 
-class SpinnerModal(title: Option[String], info0: Option[String]) extends SpinnerModalBase:
-    
-  spinner.setPrefSize(75, 75)
+trait SpinnerModalBase extends ProgressModalBase:
+  protected val spinner = new ProgressIndicator
+  def setProgress(x: Double) = spinner.setProgress(x)
 
-  val background = new Region:
-    setPrefSize(150, 150)
-    setStyle("-fx-background-color: -fx-control-inner-background; -fx-background-radius: 10;")
+trait BarModalBase extends ProgressModalBase:
+  protected val bar = new ProgressBar
+  def setProgress(x: Double) = bar.setProgress(x)
+
+
+class SpinnerModal(title: Option[String], info0: Option[String]) 
+  extends ModalStyleBase with SpinnerModalBase:    
+
+  spinner.setPrefSize(75, 75)
 
   val content = new VBox(10):
     setAlignment(Pos.CENTER)
     getChildren.addAll(titleLabel, spinner, infoLabel)
 
-  root.getChildren.addAll(background, content)
+  root.getChildren.add(content)
   
   title.foreach(titleLabel.setText)
   info0.foreach(infoLabel.setText)
 
 
-abstract class BarModalBase extends ModalStyleBase:
-
-  protected val bar = new ProgressBar
-
-  protected val titleLabel = new Label
-  protected val infoLabel = new Label
-
-  def updateProgress(x: Double): Unit =
-    Platform.runLater: () =>
-      bar.setProgress(x)
-
-  def updateProgress(index: Long, total: Long): Unit =
-    updateProgress(index.toDouble / total)
-
-  def updateInfo(x: String): Unit = 
-    Platform.runLater: () =>
-      infoLabel.setText(x)
-
-
-class BarModal(title: Option[String], info0: Option[String]) extends BarModalBase:
+class BarModal(title: Option[String], info0: Option[String]) 
+  extends ModalStyleBase with BarModalBase:
     
-  val vb = new VBox(10):
+  val content = new VBox(10):
     setAlignment(Pos.CENTER)
     getChildren.addAll(titleLabel, bar, infoLabel)
 
-  root.getChildren.addAll(new Rectangle(150, 150, Color.WHITE), vb)
-
+  root.getChildren.add(content)
   setResizable(false)  
 
   title.foreach(titleLabel.setText)
