@@ -19,6 +19,7 @@ import org.sphix.collection.ObservableSeq
 import org.sphix.control.given
 import org.sphix.concurrent.FutureModal
 import org.sphix.ui.editor.EditorFactory
+import org.sphix.util.DarkMode
 
 case class Person(
   name: String,
@@ -47,9 +48,9 @@ class Demo extends Application:
 
     darkMode.selectedProperty.onValue: isDark =>
       if isDark then
-        StyleManager.getInstance.addUserAgentStylesheet("css/dark.css")
+        DarkMode.setDarkMode()
       else
-        StyleManager.getInstance.removeUserAgentStylesheet("css/dark.css")
+        DarkMode.unsetDarkMode()
 
     val toolbar = new ToolBar(showSpinner, showTextArea, new Spring, darkMode)
 
