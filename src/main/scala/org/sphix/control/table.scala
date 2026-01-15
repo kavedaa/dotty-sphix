@@ -166,15 +166,16 @@ trait TableColumnCells[S, T]:
 
   //  Editables
 
-  trait TextFieldCell[D](using asDataOption: AsOption[T, D])(using val converter: Converter[T, String]) extends cell.TextFieldTableCell[S, T, D]:
+  trait TextFieldCell[D](using val converter: Converter[T, String])(using asDataOption: AsOption[T, D]) extends cell.TextFieldTableCell[S, T, D]:
     def dataValue(x: T) = asDataOption(x)
-
-  trait CheckBoxCellA extends TableCell[S, Boolean] with cell.CheckBoxCell
 
   //  for backwards comp.
   object TextFieldCell:
-    def apply[D](using asDataOption: AsOption[T, D])(converter0: Converter[T, String])(using DataTypeProvider[D]) = new TextFieldCell[D](using asDataOption)(using converter0) {}
-
+    def apply[D](using Converter[T, String], AsOption[T, D], DataTypeProvider[D]) = 
+      new TextFieldCell[D] {}
+  
+  trait CheckBoxCellA extends TableCell[S, Boolean] with cell.CheckBoxCell
+  
   trait CheckBoxCell(f0: S => Property[Boolean]) extends cell.CheckBoxTableCell[S]:
     def f(s: S) = f0(s)
 

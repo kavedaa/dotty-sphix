@@ -13,7 +13,7 @@ trait TextFieldTableCell[S, T, D] extends TableCell[S, T] with DataCell[T, D]:
   def converter: Converter[T, String]
 
   lazy val textField = new TextField:
-    setOnKeyPressed:
+    setOnKeyPressed {
       new EventHandler[KeyEvent]:
         def handle(event: KeyEvent) =
           event match 
@@ -23,7 +23,8 @@ trait TextFieldTableCell[S, T, D] extends TableCell[S, T] with DataCell[T, D]:
             case t if new KeyCodeCombination(KeyCode.ESCAPE) `match` t => 
               cell.cancelEdit()
             case _ =>
-
+    }
+    
   override def startEdit() =
     if isEditable && getTableView.isEditable then
       super.startEdit()
