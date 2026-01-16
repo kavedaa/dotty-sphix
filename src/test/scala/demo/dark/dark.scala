@@ -2,8 +2,6 @@ package demo.dark
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-import com.sun.javafx.css.StyleManager
-
 import javafx.application.Application
 import javafx.stage.{ Stage, Window }
 import javafx.scene.Scene
@@ -33,45 +31,71 @@ object Person:
       Generator("Engineer", "Doctor", "Lawyer", "Teacher", "Pilot", "Farmer", "Artist", "Musician", "Athlete", "Scientist").andThen[Option])
     .mapN(Person.apply)
 
+
+@main def main = Application.launch(classOf[Demo])
+
+
 class Demo extends Application:
 
   def start(stage: Stage) =
 
     given Window = stage
 
-    val persons = Person.generator.generate(100).to(ObservableSeq)
+    val tabPane = new TabPane
 
-    val showSpinner = new Button("Spinner")
-    val showTextArea = new Button("Text area")
+    val tableTab = new Tab("Table", new TablePane)
+    val popupTab = new Tab("Popup", new PopupPane)
+    val tabs = List(tableTab, popupTab)
+    tabs.foreach(_.setClosable(false))
+    tabPane.getTabs.addAll(tabs*)
 
-    val darkMode = new ToggleButton("Light/dark")
+    val mainPane = new MainPane
 
-    darkMode.selectedProperty.onValue: isDark =>
-      if isDark then
-        DarkMode.setDarkMode()
-      else
-        DarkMode.unsetDarkMode()
+    mainPane.setCenter(tabPane)
 
-    val toolbar = new ToolBar(showSpinner, showTextArea, new Spring, darkMode)
-
-    val table = summon[TableView[Person]]
-    table.setItems(persons)
-
-    val pane = new BorderPane    
-
-    pane.setTop(toolbar)
-    pane.setCenter(table)
-
-    stage.setScene(Scene(pane))
+    stage.setScene(Scene(mainPane))
     stage.show()
 
-    showSpinner.setOnAction: _ =>
-      FutureModal("Please wait...")(Thread.sleep(2000)).onComplete(_ => ())
-
-    showTextArea.setOnAction: _ =>
-      EditorFactory.TextArea[String].toDialog.withInitialValue("Hello world!").showAndWait()
-
-    darkMode.setSelected(true)
 
 
-@main def main = Application.launch(classOf[Demo])
+class MainPane extends BorderPane:
+
+  val darkMode = new ToggleButton("Light/dark")
+
+  darkMode.selectedProperty.onValue: isDark =>
+    if isDark then
+      DarkMode.setDarkMode()
+    else
+      DarkMode.unsetDarkMode()
+
+  val toolbar = new ToolBar(new Spring, darkMode)
+
+  setTop(toolbar)
+
+  darkMode.setSelected(true)
+
+
+class TablePane extends BorderPane:
+
+  val persons = Person.generator.generate(100).to(ObservableSeq)
+
+  val table = summon[TableView[Person]]
+  table.setItems(persons)
+
+  setCenter(table)
+
+
+class PopupPane(using Window) extends BorderPane:
+
+  val showSpinner = new Button("Spinner")
+  val showTextArea = new Button("Text area")
+
+  val toolbar = new ToolBar(showSpinner, showTextArea)
+
+  showSpinner.setOnAction: _ =>
+    FutureModal("Please wait...")(Thread.sleep(2000)).onComplete(_ => ())
+
+  showTextArea.setOnAction: _ =>
+    EditorFactory.TextArea[String].toDialog.withInitialValue("Hello world!").showAndWait()
+
+  setTop(toolbar)
