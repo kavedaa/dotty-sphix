@@ -7,7 +7,6 @@ import org.sphix.*
 
 class ClearableEditorFactory[A](inner: EditorFactory[A])(using texts: EditorTexts, icons: EditorIcons) extends EditorFactory[A]:
   def createEditor = new Editor:
-    type C = Container.Primitive
     val innerEditor = inner.createEditor
     export innerEditor.{ get, set, value, status, clear }
     val clearButton = new Button:
@@ -20,7 +19,6 @@ class ClearableEditorFactory[A](inner: EditorFactory[A])(using texts: EditorText
       innerEditor.container(label) match
         case container: Container.Primitive => 
           new Container.Primitive(this, label, container.node, lateralNodes = container.lateralNodes :+ clearButton)
+        case container: Container.MultiPrimitive => 
+          new Container.MultiPrimitive(this, label, container.nodes :+ clearButton)
         case container => container
-
-object ClearableEditorFactory:
-  def apply[A](using inner: EditorFactory[A])(using EditorTexts, EditorIcons) = new ClearableEditorFactory(inner)

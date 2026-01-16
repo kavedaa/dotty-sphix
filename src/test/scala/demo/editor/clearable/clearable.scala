@@ -19,14 +19,13 @@ case class Data(
 
 object ClearableDemo extends BorderPane with DemoUtils:
 
-  given (using EditorFactory[String]): EditorFactory[String] = EditorFactory.Clearable[String]
-  given (using EditorFactory[LocalDate]): EditorFactory[LocalDate] = EditorFactory.Clearable[LocalDate]
-  given (using EditorFactory[Double]): EditorFactory[Double] = EditorFactory.Clearable[Double]
+  given stringFactory: EditorFactory[Option[String]] = (new EditorFactory.TextField[Option[String]]).clearable
+  given localDateFactory: EditorFactory[Option[LocalDate]] = (new EditorFactory.DatePickerOption).clearable
 
   val primitivesButton = new Button("Primitives")
 
-  // primitivesButton.setOnAction: _ =>
-  //   new EditorDialog[Data].showAndWait().ifPresent(println)
+  primitivesButton.setOnAction: _ =>
+    new EditorDialog[Data].showAndWait().ifPresent(println)
 
   val toolbar = new ToolBar(primitivesButton)
 

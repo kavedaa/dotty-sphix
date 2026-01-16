@@ -3,7 +3,7 @@ package org.sphix.ui.editor
 import org.sphix.*
 
 trait Editor[A]: 
-  type C <: Container
+//  type C <: Container
   def get: A
   def status: Val[Status]
   def value: Val[Value[A]]
@@ -18,7 +18,7 @@ object Editor:
   extension [A] (self: Editor[A]) 
     def transform[B](f: A => B)(g: B => A) = 
       new Editor[B]:
-        type C = self.C
+//        type C = self.C
         def get = f(self.get)
         def value = self.value.map(v => v.map(f))
         def set(x: B) = self.set(g(x))

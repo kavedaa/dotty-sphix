@@ -19,16 +19,15 @@ object Container:
     (using layouter: Layouter[Primitive])
     extends Container:
       def layout(isTopLevel: Boolean, onLayoutChange: Option[() => Unit] = None) = layouter.layout(this, isTopLevel, onLayoutChange)
-      def withEditor(that: Editor[?]) = copy(editor = that)
 
   case class MultiPrimitive(
     editor: Editor[?], 
     label: Option[String], 
-    nodes: Seq[Node])
+    nodes: Seq[Node],
+    lateralNodes: Seq[Node] = Nil)
     (using layouter: Layouter[MultiPrimitive])
     extends Container:
       def layout(isTopLevel: Boolean, onLayoutChange: Option[() => Unit] = None) = layouter.layout(this, isTopLevel, onLayoutChange)
-      def withEditor(that: Editor[?]) = copy(editor = that)
 
   case class Composite(
     editor: Editor[?], 
@@ -37,7 +36,6 @@ object Container:
     (using layouter: Layouter[Composite])
     extends Container:
       def layout(isTopLevel: Boolean, onLayoutChange: Option[() => Unit] = None) = layouter.layout(this, isTopLevel, onLayoutChange)
-      def withEditor(that: Editor[?]) = copy(editor = that)
 
   case class Dynamic(
     editor: Editor[?], 
@@ -48,5 +46,4 @@ object Container:
     (using layouter: Layouter[Dynamic])
     extends Container:
       def layout(isTopLevel: Boolean, onLayoutChange: Option[() => Unit] = None) = layouter.layout(this, isTopLevel, onLayoutChange)
-      def withEditor(that: Editor[?]) = copy(editor = that)
 

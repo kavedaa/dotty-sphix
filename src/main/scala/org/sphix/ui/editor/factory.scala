@@ -36,9 +36,13 @@ object EditorFactory:
   //       def container(label: Option[String]) = innerEditor.container(label).withEditor(this)
 
   extension [A] (self: EditorFactory[A]) 
+
     def transform[B](using f: A => B)(using g: B => A): EditorFactory[B] = 
       new EditorFactory:
         def createEditor = self.createEditor.transform(f)(g)
+
+    def clearable(using texts: EditorTexts, icons: EditorIcons): EditorFactory[A] = 
+      new ClearableEditorFactory(self)
 
   extension [A >: Null] (self: EditorFactory[A]) 
     def toDialog(label: Option[String], value0: Option[A]): EditorDialog[A] = new EditorDialog(label, value0)(using self)
@@ -62,10 +66,10 @@ object EditorFactory:
 
   //  built-in factories, exported here for discoverability
 
-  export org.sphix.ui.editor.ClearableEditorFactory as Clearable
-
   export org.sphix.ui.editor.TextFieldEditorFactory as TextField
   export org.sphix.ui.editor.TextAreaEditorFactory as TextArea
+  export org.sphix.ui.editor.DatePickerEditorFactory as DatePicker
+  export org.sphix.ui.editor.DatePickerOptionEditorFactory as DatePickerOption
   export org.sphix.ui.editor.CheckBoxEditorFactory as CheckBox
   export org.sphix.ui.editor.ListViewListEditorFactory as ListViewList
   export org.sphix.ui.editor.CheckBoxListEditorFactory as CheckBoxList

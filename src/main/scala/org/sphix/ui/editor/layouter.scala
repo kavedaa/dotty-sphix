@@ -86,6 +86,7 @@ object Layouter:
         val node = new VBox(5):
           multiPrimitive.label.foreach(label => getChildren.add(new Label(label)))
           getChildren.addAll(multiPrimitive.nodes*)
+          multiPrimitive.lateralNodes.foreach(x => getChildren.add(x))
         node.getStyleClass.add(StyleClassName)
         multiPrimitive.editor.status onValue { status => updateStatus(node, status) }
         updateStatus(node, multiPrimitive.editor.status())

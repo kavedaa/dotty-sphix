@@ -18,7 +18,7 @@ object PrimitiveDemo extends BorderPane with DemoUtils:
     new EditorDialog[String]("Please input a string").showAndWait().ifPresent(println)
 
   clearableButton.setOnAction: _ =>
-    EditorFactory.Clearable[String].toDialog("Please input a string").showAndWait().ifPresent(println)
+    EditorFactory[String].clearable.toDialog("Please input a string").showAndWait().ifPresent(println)
 
   val toolbar = new ToolBar(stringButton, clearableButton)
 
