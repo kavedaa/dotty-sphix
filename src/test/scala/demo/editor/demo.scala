@@ -114,6 +114,10 @@ class Demo extends SimpleApp:
     setClosable(false)
     setContent(ComboBoxDemo)
 
+  val radioItemDemo = new Tab("RadioItem"):
+    setClosable(false)
+    setContent(demo.editor.radioitem.RadioItemDemo)
+
   val compositeDemo = new Tab("Composite"):
     setClosable(false)
     setContent(CompositeDemo)
@@ -182,6 +186,7 @@ class Demo extends SimpleApp:
   val root = new TabPane(
     primitiveDemo, 
     comboBoxDemo, 
+    radioItemDemo,
     compositeDemo, 
     optionDemo, 
     tableDemo, 

@@ -71,6 +71,7 @@ object EditorFactory:
   export org.sphix.ui.editor.CheckBoxListEditorFactory as CheckBoxList
   export org.sphix.ui.editor.ListViewItemEditorFactory as ListViewItem
   export org.sphix.ui.editor.RadioItemEditorFactory as RadioItem
+  export org.sphix.ui.editor.RadioItemOptionEditorFactory as RadioItemOption
   export org.sphix.ui.editor.ComboBoxEditorFactory as ComboBox
   export org.sphix.ui.editor.ComboBoxOptionEditorFactory as ComboBoxOption
   export org.sphix.ui.editor.FilesEditorFactory as Files

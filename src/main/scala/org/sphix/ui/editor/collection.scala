@@ -58,37 +58,41 @@ class ListViewItemEditorFactory[A](items: => Iterable[A])(render: A => String)(u
     def clear() = listView.getSelectionModel.clearSelection()
     def container(label: Option[String]) = Container.Primitive(this, label, listView)
 
-class RadioItemEditorFactory[A](items: => Iterable[A])(render: A => String)(using Layouter[Container.MultiPrimitive]) extends EditorFactory[A]:
-  def createEditor = new Editor[A]:
-    type C = Container.MultiPrimitive
-    val group = new ToggleGroup
-    val itemRadios = items.map(item => new RadioButton(render(item)) { setToggleGroup(group) } -> item).toList
-    def get = itemRadios.collectFirst { case (r, item) if r.isSelected => item } .get
-    val value = itemRadios
+abstract class RadioItemEditorBase[A, B](items: => Iterable[A])(render: A => String)(using Layouter[Container.MultiPrimitive]) 
+  extends Editor[B]:
+  type C = Container.MultiPrimitive
+  val group = new ToggleGroup
+  val itemRadios = items.map(item => new RadioButton(render(item)) { setToggleGroup(group) } -> item).toList
+  protected def selected = itemRadios.collectFirst { case (r, item) if r.isSelected => item }
+  protected val observableSelected =
+    itemRadios
       .map { (r, item) => r.selectedProperty map { _ -> item } }
-      .mapSeq { xs => Value.fromOption(xs.toList collectFirst { case (selected, item) if selected => item} ) }
-    val status = group.selectedToggleProperty.isNotNull.map(Status.fromBoolean)
-    def set(x: A) = itemRadios find { (r, item) => item == x } foreach { (r, item) => r.setSelected(true) }
-    def clear() = itemRadios foreach { (r, item) => r.setSelected(false) }    
-    def container(label: Option[String]) = Container.MultiPrimitive(this, label, itemRadios.map(_._1))
+      .mapSeq { xs => xs.toList collectFirst { case (selected, item) if selected => item}  }
+  protected def select(x: A) = itemRadios find { (r, item) => item == x } foreach { (r, item) => r.setSelected(true) }
+  def clear() = itemRadios foreach { (r, item) => r.setSelected(false) }    
+  def container(label: Option[String]) = Container.MultiPrimitive(this, label, itemRadios.map(_._1))
 
-// class ComboBoxEditorFactoryBase[A](comboBoxFactory: => ComboBox[A])(items: => Iterable[A])(render: A => String)(using Layouter[Container.Primitive[A], A]) extends EditorFactory[A]:
-//   def createEditor = new Editor[A]:
-//     type C = Container.Primitive[A]
-//     val comboBox = comboBoxFactory
-//     comboBox.setMaxWidth(Int.MaxValue)
-//     comboBox.setItems(ObservableSeq.from(items))
-//     comboBox.setConverter {
-//       new StringConverter[A] {
-//         def fromString(x: String) = ???
-//         def toString(x: A) = if x == null then "" else render(x)
-//       }
-//     }
-//     val value = comboBox.getSelectionModel.selectedItemProperty.mapOption.map(Value.fromOption)
-//     val status = comboBox.getSelectionModel.selectedItemProperty.isNotNull.map(Status.fromBoolean)
-//     def set(x: A) = comboBox.getSelectionModel.select(x)
-//     def clear() = comboBox.getSelectionModel.clearSelection()
-//     def container(label: Option[String]) = Container.Primitive(this, label, comboBox)
+class RadioItemEditor[A](items: => Iterable[A])(render: A => String)(using Layouter[Container.MultiPrimitive]) 
+  extends RadioItemEditorBase[A, A](items)(render):
+  def get = selected.get
+  val value = observableSelected.map(Value.fromOption)
+  val status = group.selectedToggleProperty.isNotNull.map(Status.fromBoolean)
+  def set(x: A) = select(x)
+
+class RadioItemEditorFactory[A](items: => Iterable[A])(render: A => String)(using Layouter[Container.MultiPrimitive]) extends EditorFactory[A]:
+  def createEditor = new RadioItemEditor[A](items)(render)
+
+class RadioItemOptionEditor[A](items: => Iterable[A])(render: A => String)(using Layouter[Container.MultiPrimitive]) 
+  extends RadioItemEditorBase[A, Option[A]](items)(render):
+  def get = selected
+  val value = observableSelected.map(Value.Valid.apply)
+  val status = Val(Status.Valid)
+  def set(x: Option[A]) = x match
+    case Some(value) => select(value)
+    case None => clear()
+
+class RadioItemOptionEditorFactory[A](items: => Iterable[A])(render: A => String)(using Layouter[Container.MultiPrimitive]) extends EditorFactory[Option[A]]:
+  def createEditor = new RadioItemOptionEditor[A](items)(render)
 
 class ComboBoxEditorFactory[A](items: => Iterable[A])(using comboBoxFactory: ComboBoxFactory[A])(using Layouter[Container.Primitive]) extends EditorFactory[A]:
   def createEditor = new Editor[A]:
