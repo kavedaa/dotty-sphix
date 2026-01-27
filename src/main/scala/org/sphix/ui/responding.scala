@@ -63,13 +63,14 @@ class DefaultResponder[A](using render: Render[A]) extends Responder[A]:
     Responding.notification(render(x).map(message).getOrElse(""))
 
 class OptionResponder[A](using inner: Responder[A]) extends Responder[Option[A]]:
-  def respond(x: Option[A])(usinmessage: String => String) = 
-    x.foreach(inner.respond)
+  def respond(x: Option[A])(message: String => String) = 
+    x.foreach(value => inner.respond(value)(message))
 
 class TryResponder[A](using inner: Responder[A]) extends Responder[Try[A]]:
-  def respond(x: Try[A])(message: String => String) = x match
-    case Success(value) => inner.respond(value)(message)
-    case Failure(ex) => Responding.error(ex)
+  def respond(x: Try[A])(message: String => String) = 
+    x match
+      case Success(value) => inner.respond(value)(message)
+      case Failure(ex) => Responding.error(ex)
 
 class IterableResponder[A](using render: Render[A]) extends Responder[Iterable[A]]:
   def respond(x: Iterable[A])(message: String => String) = 
