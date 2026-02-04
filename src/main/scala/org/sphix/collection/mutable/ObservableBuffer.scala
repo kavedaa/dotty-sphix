@@ -32,12 +32,12 @@ class ObservableBuffer[A](protected val observableList: ObservableList[A])
     observableList.add(i, elem)
 
   def insertAll(n: Int, elems: IterableOnce[A]) =
-    observableList.addAll(n, elems.toIterable.asJavaCollection)
+    observableList.addAll(n, elems.iterator.to(Iterable).asJavaCollection)
 
   def patchInPlace(from: Int, patch: IterableOnce[A], replaced: Int) = 
     val sub = observableList.subList(from, from + replaced)
     sub.clear()
-    sub.addAll(patch.toIterable.asJavaCollection)
+    sub.addAll(patch.iterator.to(Iterable).asJavaCollection)
     this
 
   def prepend(elem: A) = 
@@ -54,20 +54,20 @@ class ObservableBuffer[A](protected val observableList: ObservableList[A])
     observableList.set(n, elem)
 
   def update(elems: IterableOnce[A]) = 
-    observableList.setAll(elems.toIterable.asJavaCollection)
+    observableList.setAll(elems.iterator.to(Iterable).asJavaCollection)
   
   //	Overrides to avoid element-for-element changes from default implementation
 
   override def addAll(xs: IterableOnce[A]) = 
-    observableList.addAll(xs.toIterable.asJavaCollection)
+    observableList.addAll(xs.iterator.to(Iterable).asJavaCollection)
     this
 
   override def prependAll(xs: IterableOnce[A]) = 
-    observableList.addAll(0, xs.toIterable.asJavaCollection)
+    observableList.addAll(0, xs.iterator.to(Iterable).asJavaCollection)
     this
 
-  override def subtractAll(xs: TraversableOnce[A]) = 
-    observableList.removeAll(xs.toIterable.asJavaCollection)
+  override def subtractAll(xs: IterableOnce[A]) = 
+    observableList.removeAll(xs.iterator.to(Iterable).asJavaCollection)
     this
 
   //  Additional convenience methods
