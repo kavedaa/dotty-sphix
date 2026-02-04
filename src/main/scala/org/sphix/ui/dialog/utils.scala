@@ -26,8 +26,8 @@ trait DialogUtils[A >: Null] extends Dialog[A] with FormUtils:
   
     getDialogPane.getButtonTypes.addAll(ButtonType.CANCEL, executeButtonType)
 
-    val executeButton = (getDialogPane lookupButton executeButtonType).asInstanceOf[Button]
-    executeButton.disableProperty bind valid.map(x => !x)
+    val executeButton = getDialogPane.lookupButton(executeButtonType).asInstanceOf[Button]
+    executeButton.disableProperty.bind(valid.map(x => !x))
 
     setResultConverter: (dialogButtonType: ButtonType) =>
       if (dialogButtonType == executeButtonType) && valid() then result.orNull

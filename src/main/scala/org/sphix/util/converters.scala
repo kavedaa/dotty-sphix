@@ -59,8 +59,8 @@ class DoubleConverter extends RightConverter[Double, String] {
 }
 
 class FormattedDoubleConverter(dcf: DecimalFormat) extends RightConverter[Double, String] {
-  def convert(a: Double) = dcf format a
-  def deconvert(b: String) = Try((dcf parse b).doubleValue).toOption
+  def convert(a: Double) = dcf.format(a)
+  def deconvert(b: String) = Try((dcf.parse(b)).doubleValue).toOption
 }
 
 object DoubleConverter {
@@ -73,15 +73,15 @@ object FormattedDoubleConverter {
 }
 
 class BigDecimalConverter(dcf: DecimalFormat) extends RightConverter[BigDecimal, String] {
-  dcf setParseBigDecimal true
-  def convert(a: BigDecimal) = dcf format a
-  def deconvert(b: String) = Try((dcf parse b).asInstanceOf[java.math.BigDecimal]: BigDecimal).toOption
+  dcf.setParseBigDecimal(true)
+  def convert(a: BigDecimal) = dcf.format(a)
+  def deconvert(b: String) = Try(dcf.parse(b).asInstanceOf[java.math.BigDecimal]: BigDecimal).toOption
 }
 
 class BigDecimalOptionConverter(dcf: DecimalFormat) extends RightConverter[Option[BigDecimal], String] {
-  dcf setParseBigDecimal true
-  def convert(a: Option[BigDecimal]) = a map dcf.format getOrElse ""
-  def deconvert(b: String) = if (b.isEmpty) Some(None) else Try(Some((dcf parse b).asInstanceOf[java.math.BigDecimal]: BigDecimal)).toOption
+  dcf.setParseBigDecimal(true)
+  def convert(a: Option[BigDecimal]) = a.map(dcf.format).getOrElse("")
+  def deconvert(b: String) = if (b.isEmpty) Some(None) else Try(Some(dcf.parse(b).asInstanceOf[java.math.BigDecimal]: BigDecimal)).toOption
 }
 
 object BigDecimalConverter {
@@ -94,8 +94,8 @@ object BigDecimalOptionConverter {
 
 trait DateConverter extends RightConverter[java.util.Date, String] {
   def dateFormat: DateFormat
-  def convert(a: java.util.Date) = dateFormat format a
-  def deconvert(b: String) = Try(dateFormat parse b).toOption
+  def convert(a: java.util.Date) = dateFormat.format(a)
+  def deconvert(b: String) = Try(dateFormat.parse(b)).toOption
 }
 
 object DateConverter {
@@ -106,8 +106,8 @@ object DateConverter {
 
 trait DateOptionConverter extends RightConverter[Option[java.util.Date], String] {
   def dateFormat: DateFormat
-  def convert(a: Option[java.util.Date]) = a map dateFormat.format getOrElse ""
-  def deconvert(b: String) = if (b.isEmpty) Some(None) else Try(Some(dateFormat parse b)).toOption
+  def convert(a: Option[java.util.Date]) = a.map(dateFormat.format).getOrElse("")
+  def deconvert(b: String) = if (b.isEmpty) Some(None) else Try(Some(dateFormat.parse(b))).toOption
 }
 
 object DateOptionConverter {

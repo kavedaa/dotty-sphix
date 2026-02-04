@@ -20,7 +20,7 @@ class FilteredSeq[A](source: ObservableSeq[A], predicate: Val[A => Boolean])
   
   val javaPredicate: Val[Predicate[A]] = predicate.map(_.asJava)
 
-  observableList.predicateProperty bind javaPredicate
+  observableList.predicateProperty.bind(javaPredicate)
   
   def toObservableList = observableList
 }

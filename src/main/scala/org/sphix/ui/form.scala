@@ -29,7 +29,7 @@ trait FormUtils extends LayoutUtils:
 
   // for backwards comp.
   def pvbox(nodes: Node*) = new VBox(boxGap) {
-    getChildren.addAll(nodes: _*)
+    getChildren.addAll(nodes*)
     setPadding(new Insets(padding))
   }
 
@@ -39,7 +39,7 @@ trait FormUtils extends LayoutUtils:
 
   // for backwards comp.
   def phbox(nodes: Node*) = new HBox(boxGap) {
-    getChildren.addAll(nodes: _*)
+    getChildren.addAll(nodes*)
     setPadding(new Insets(padding))
     setAlignment(Pos.CENTER_LEFT)
   }
@@ -50,7 +50,7 @@ trait FormUtils extends LayoutUtils:
   def velems(label: String, nodes: Node*) =
     new VBox(elemGap) {
       getChildren.add(new Label(label))
-      getChildren.addAll(nodes: _*)
+      getChildren.addAll(nodes*)
     }
 
   def helem(label: String, node: Node) =
@@ -60,7 +60,7 @@ trait FormUtils extends LayoutUtils:
   def helems(label: String, nodes: Node*) =
     new HBox(elemGap) {
       getChildren.add(new Label(label))
-      getChildren.addAll(nodes: _*)
+      getChildren.addAll(nodes*)
       setAlignment(Pos.CENTER_LEFT)
     }
 

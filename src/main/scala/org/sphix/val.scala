@@ -20,8 +20,8 @@ private class ConstVal[A](value: A) extends ObservableValue[A]:
   def getValue() = value
   def addListener(listener: InvalidationListener) = {}
   def removeListener(listener: InvalidationListener) = {}
-  def addListener(listener: ChangeListener[_ >: A]) = {}
-  def removeListener(listener: ChangeListener[_ >: A]) = {}
+  def addListener(listener: ChangeListener[? >: A]) = {}
+  def removeListener(listener: ChangeListener[? >: A]) = {}
 
 object Val:
 
@@ -39,7 +39,7 @@ extension [A] (x: Val[A])
 
   def apply() = x.getValue
 
-  def onChange[U](f: (Val[_ <: A], A, A) => U): Observer =
+  def onChange[U](f: (Val[? <: A], A, A) => U): Observer =
     val observer = new ChangeObserver[A, U](Seq(x), f)
     x.addListener(observer)
     observer

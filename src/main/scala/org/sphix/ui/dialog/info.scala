@@ -18,8 +18,8 @@ class InfoDialog(title: Option[String], header: Option[String], message: String)
     setWrapText(true)
   }
 
-  title foreach setTitle
-  header foreach getDialogPane.setHeaderText
+  title.foreach(setTitle)
+  header.foreach(getDialogPane.setHeaderText)
   textArea.setText(message)
   
   getDialogPane.setContent(textArea)
@@ -29,7 +29,7 @@ class InfoDialog(title: Option[String], header: Option[String], message: String)
   img.getStyleClass.addAll("alert", "info", "dialog-pane")
   setGraphic(img)
 
-  getDialogPane.getButtonTypes add ButtonType.CLOSE
+  getDialogPane.getButtonTypes.add(ButtonType.CLOSE)
 
   setResizable(true)
 }

@@ -33,7 +33,7 @@ trait ObservableSeq[A]
 
   def onChange[U](f: Seq[Change[A]] => U) =
     val listener = new ListChangeListener[A]:
-      def onChanged(change: javafx.collections.ListChangeListener.Change[_ <: A]) =
+      def onChanged(change: javafx.collections.ListChangeListener.Change[? <: A]) =
         val seqChanges = new ArrayBuffer[Change[A]]()
         while change.next() do
           if change.wasPermutated then

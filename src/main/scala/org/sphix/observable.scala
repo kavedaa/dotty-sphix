@@ -6,8 +6,9 @@ import javafx.beans.binding._
 extension (observable: Observable)
 
   def onInvalidation[U](f: Observable => U): Unit =
-    observable addListener new InvalidationListener:
-      def invalidated(x: Observable) = f(x)
+    observable.addListener:
+      new InvalidationListener:
+        def invalidated(x: Observable) = f(x)
 
   def observe[U](f: => U): Unit = observable.onInvalidation(_ => f)
 

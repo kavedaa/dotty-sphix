@@ -27,7 +27,7 @@ object ObservableSeq extends SeqFactory[ObservableSeq] {
   
   def from[A](source: IterableOnce[A]): ObservableSeq[A] = {
     val list = javaList[A]
-    source.iterator.asJava forEachRemaining { x => list add x }
+    source.iterator.asJava forEachRemaining { x => list.add(x) }
     new ObservableSeq(list)
   }
 
@@ -36,7 +36,7 @@ object ObservableSeq extends SeqFactory[ObservableSeq] {
     private val list = javaList[A]
 
     def addOne(elem: A) = {
-      list add elem
+      list.add(elem)
       this
     }
 

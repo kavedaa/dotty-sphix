@@ -13,7 +13,7 @@ trait DatePickerTableCell[S] extends TableCell[S, Option[LocalDate]] { cell =>
 
   def formatter: DateTimeFormatter
 
-  this.getStyleClass add "datepicker-table-cell"
+  this.getStyleClass.add("datepicker-table-cell")
 
   private lazy val datePicker = new DatePicker {
 
@@ -36,7 +36,7 @@ trait DatePickerTableCell[S] extends TableCell[S, Option[LocalDate]] { cell =>
 
     if (isEditable && getTableView.isEditable && getTableColumn.isEditable) {
 
-      datePicker setValue getItem.orNull
+      datePicker.setValue(getItem.orNull)
 
       super.startEdit()
 
@@ -57,7 +57,7 @@ trait DatePickerTableCell[S] extends TableCell[S, Option[LocalDate]] { cell =>
     super.updateItem(item, empty)
     if (!empty) {
       if (isEditing) {
-        datePicker setValue getItem.orNull
+        datePicker.setValue(getItem.orNull) 
         setText(null)
         setGraphic(datePicker)
       }

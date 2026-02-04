@@ -47,9 +47,9 @@ trait ComboBoxTableCell[S, T] extends TableCell[S, T] { cell =>
 
   override def startEdit() = {
     if (isEditable && getTableView.isEditable && getTableColumn.isEditable) {
-    
-      comboBox setItems items(getTableView.getItems get getIndex)
-      comboBox.getSelectionModel select getItem //	important that this comes before super.startEdit()
+
+      comboBox.setItems(items(getTableView.getItems.get(getIndex)))
+      comboBox.getSelectionModel.select(getItem) //	important that this comes before super.startEdit()
 
       super.startEdit()
 
@@ -71,7 +71,7 @@ trait ComboBoxTableCell[S, T] extends TableCell[S, T] { cell =>
     super.updateItem(item, empty)
     if (!empty) {
       if (isEditing) {
-        comboBox.getSelectionModel select getItem
+        comboBox.getSelectionModel.select(getItem)
         setText(null)
         setGraphic(comboBox)
       }

@@ -53,7 +53,7 @@ trait CheckBoxTableCell[S] extends TableCell[S, Boolean] with Cell[Boolean]:
     super.onUpdate(item)
     setGraphic(checkbox)
     if binding != null then binding.unbind()
-    val rowItem = getTableView.getItems get getIndex
+    val rowItem = getTableView.getItems.get(getIndex)
     binding = bindBidirectionalWithConverter(checkbox.selectedProperty, f(rowItem))
 
 object CheckBoxTableCell {

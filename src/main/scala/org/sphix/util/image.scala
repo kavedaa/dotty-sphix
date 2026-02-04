@@ -4,7 +4,7 @@ import javafx.scene.image.*
 
 trait ImageResolver extends (String => Image)
 
-class ResourceImageResolver(cls: Class[_], f: String => String) extends ImageResolver:  
+class ResourceImageResolver(cls: Class[?], f: String => String) extends ImageResolver:  
   def apply(filename: String) = 
     val name = f(filename)
     cls.getResourceAsStream(f(filename)) match

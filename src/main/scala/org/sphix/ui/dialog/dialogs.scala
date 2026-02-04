@@ -26,8 +26,8 @@ class InputDialog[A, N <: Node](val inputControl: N, title: String, inputTitle: 
       setHgap(10)
       setVgap(10)
       val label = new Label(inputTitle)
-      getChildren addAll (label, inputControl)
-      GridPane setHgrow (inputControl, Priority.ALWAYS)
+      getChildren.addAll(label, inputControl)
+      GridPane.setHgrow(inputControl, Priority.ALWAYS)
       contentDisplay match {
         case ContentDisplay.RIGHT =>
           GridPane.setColumnIndex(inputControl, 1);
@@ -38,21 +38,21 @@ class InputDialog[A, N <: Node](val inputControl: N, title: String, inputTitle: 
 
   setTitle(title)
   setResizable(false)
-  getDialogPane setContent content
+  getDialogPane.setContent(content)
 
   val okButtonType = new ButtonType("OK", ButtonData.OK_DONE)
 
-  getDialogPane.getButtonTypes addAll (ButtonType.CANCEL, okButtonType)
+  getDialogPane.getButtonTypes.addAll(ButtonType.CANCEL, okButtonType)
 
-  val okButton = (getDialogPane lookupButton okButtonType).asInstanceOf[Button]
+  val okButton = (getDialogPane.lookupButton(okButtonType)).asInstanceOf[Button]
 }
 
 class TextFieldDialog[T](converter: RightConverter[T, String], title: String, inputTitle: String)
   extends InputDialog[Option[T], TextField](new TextField, title, inputTitle, ContentDisplay.RIGHT) {
 
-  val value = inputControl.textProperty map converter.deconvert
+  val value = inputControl.textProperty.map(converter.deconvert)
 
-  val valueDefined = value map (_.isEmpty)
+  val valueDefined = value.map(_.isEmpty)
   okButton.disableProperty <== valueDefined.as
 
   setResultConverter { (dialogButton: ButtonType) =>
@@ -61,7 +61,7 @@ class TextFieldDialog[T](converter: RightConverter[T, String], title: String, in
   }
 
   def input(initValue: Option[T] = None) = {
-    initValue foreach (v => inputControl setText (converter convert v))
+    initValue foreach (v => inputControl.setText(converter.convert(v)))
     inputControl.requestFocus()
     val res = showAndWait()
     if (res.isPresent) res.get else None
@@ -77,7 +77,7 @@ class TextAreaDialog(title: String, inputTitle: String)
   }
 
   def input(initValue: Option[String] = None) = {
-    initValue foreach (v => inputControl setText v)
+    initValue foreach (v => inputControl.setText(v))
     inputControl.requestFocus()
     val res = showAndWait()
     if (res.isPresent) Some(res.get) else None
@@ -87,9 +87,9 @@ class TextAreaDialog(title: String, inputTitle: String)
 class ComboBoxDialog[T](cellFactory: => ListCell[T], title: String, inputTitle: String)
   extends InputDialog[Option[T], ComboBox[T]](new ComboBox[T], title, inputTitle, ContentDisplay.RIGHT) {
 
-  inputControl setMinWidth 150
-  inputControl setCellFactory ((_: ListView[T]) => cellFactory)
-  inputControl setButtonCell (cellFactory)
+  inputControl.setMinWidth(150)
+  inputControl.setCellFactory((_: ListView[T]) => cellFactory)
+  inputControl.setButtonCell(cellFactory)
 
   okButton.disableProperty <== inputControl.getSelectionModel.selectedItemProperty.isNull
 
@@ -102,8 +102,8 @@ class ComboBoxDialog[T](cellFactory: => ListCell[T], title: String, inputTitle: 
 
   def input(items: Iterable[T], initValue: Option[T] = None) = {
     val xs = items.to(ObservableSeq)
-    inputControl setItems xs //  TODO why we need this??
-    initValue foreach (v => inputControl.getSelectionModel select v)
+    inputControl.setItems(xs) //  TODO why we need this??
+    initValue foreach (v => inputControl.getSelectionModel.select(v))
     inputControl.requestFocus()
     val res = showAndWait()
     if (res.isPresent) res.get else None
@@ -120,7 +120,7 @@ class CheckBoxesDialog[T](title: String, inputTitle: String, values: Seq[T], sel
   }
 
   val xs = (cbs.map (_._2).to(ObservableSeq))   //  TODO why we need this??
-  inputControl.getChildren setAll xs
+  inputControl.getChildren.setAll(xs)
 
   setResultConverter { (dialogButton: ButtonType) =>
     if (dialogButton == okButtonType) cbs filter (_._2.isSelected) map (_._1)
@@ -147,7 +147,7 @@ class RadioDialog[T](title: String, inputTitle: String, values: Seq[T], selected
   }
 
   val xs = (cbs.map (_._2).to(ObservableSeq))   //  TODO why we need this??
-  inputControl.getChildren setAll xs
+  inputControl.getChildren.setAll(xs)
 
   setResultConverter { (dialogButton: ButtonType) =>
     if (dialogButton == okButtonType) cbs.filter(_._2.isSelected).headOption map (_._1)
@@ -164,9 +164,9 @@ class RadioDialog[T](title: String, inputTitle: String, values: Seq[T], selected
 class PasswordDialog(title: String, inputTitle: String, authenticator: String => Boolean)
   extends InputDialog[Boolean, PasswordField](new PasswordField, title, inputTitle, ContentDisplay.BOTTOM) {
 
-  val correct = inputControl.textProperty.delayed map authenticator.asJavaFunction
+  val correct = inputControl.textProperty.delayed.map(authenticator.asJavaFunction)
 
-  okButton.disableProperty <== correct map (x => !x)
+  okButton.disableProperty <== correct.map(x => !x)
 
   setResultConverter { (dialogButton: ButtonType) =>
     if (dialogButton == okButtonType) correct()
@@ -188,12 +188,11 @@ class DatePickerDialog(title: String, date0: Option[LocalDate] = None) extends D
 
   setTitle(title)
   setResizable(false)
-  getDialogPane setContent picker
+  getDialogPane.setContent(picker)
 
   val okButtonType = new ButtonType("OK", ButtonData.OK_DONE)
 
-  getDialogPane.getButtonTypes addAll (ButtonType.CANCEL, okButtonType)
-
+  getDialogPane.getButtonTypes.addAll(ButtonType.CANCEL, okButtonType)
   setResultConverter { (dialogButton: ButtonType) =>
     if (dialogButton == okButtonType) picker.getValue
     else null
@@ -224,15 +223,15 @@ class ErrorDialog(title: Option[String], header: Option[String], message: String
   img.getStyleClass.addAll("alert", "error", "dialog-pane")
   setGraphic(img)
 
-  getDialogPane.getButtonTypes add ButtonType.CLOSE
+  getDialogPane.getButtonTypes.add(ButtonType.CLOSE)
 
   setResizable(true)
 }
 
-class ErrorsDialog[A](title: String, errors: Seq[(A, Failure[_])])(render: A => String)
+class ErrorsDialog[A](title: String, errors: Seq[(A, Failure[?])])(render: A => String)
   extends Dialog[Nothing] {
 
-  val table = new TableView[(A, Failure[_])] with TableUtils[(A, Failure[_])] {
+  val table = new TableView[(A, Failure[?])] with TableUtils[(A, Failure[?])] {
 
     val item = new Column("Item", x => Val(render(x._1)))
     val error = new Column("Error", x => Val(x._2.exception.getMessage))
@@ -246,7 +245,7 @@ class ErrorsDialog[A](title: String, errors: Seq[(A, Failure[_])])(render: A => 
   getDialogPane.setHeaderText(title)
   getDialogPane.setContent(table)
 
-  getDialogPane.getButtonTypes add ButtonType.CLOSE
+  getDialogPane.getButtonTypes.add(ButtonType.CLOSE)
 
   getDialogPane.setPrefWidth(800)
 
@@ -272,7 +271,7 @@ class TrysDialog[A](title: String, xs: Iterable[Try[A]])(render: A => String)
   getDialogPane.setHeaderText(title)
   getDialogPane.setContent(list)
 
-  getDialogPane.getButtonTypes add ButtonType.CLOSE
+  getDialogPane.getButtonTypes.add(ButtonType.CLOSE)
 
   getDialogPane.setPrefWidth(800)
 
@@ -285,7 +284,7 @@ class ContentDialog(title: String, content: Node)
   setTitle(title)
   getDialogPane.setContent(content)
 
-  getDialogPane.getButtonTypes add ButtonType.CLOSE
+  getDialogPane.getButtonTypes.add(ButtonType.CLOSE)
 
   setResizable(true)
 }

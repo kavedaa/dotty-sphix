@@ -6,10 +6,10 @@ import javafx.scene.control._
 import org.sphix.collection.mutable.ObservableBuffer._
 
 trait CellCopyable:
-  this: TableView[_] =>
+  this: TableView[?] =>
 
-  getSelectionModel setSelectionMode SelectionMode.MULTIPLE
-  getSelectionModel setCellSelectionEnabled true
+  getSelectionModel.setSelectionMode(SelectionMode.MULTIPLE)
+  getSelectionModel.setCellSelectionEnabled(true)
 
   setOnKeyReleased { (e: KeyEvent) =>
     val keyCombination = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN)
@@ -39,10 +39,10 @@ trait CellCopyable:
     */
   private def tableSelectionTextMatrix: Seq[Seq[String]] =
 
-    def linearColumns(columns: Seq[TableColumn[_, _]]) =
+    def linearColumns(columns: Seq[TableColumn[?, ?]]) =
       columns.flatMap(childColumns)
 
-    def childColumns(column: TableColumn[_, _]): Seq[TableColumn[_, _]] =
+    def childColumns(column: TableColumn[?, ?]): Seq[TableColumn[?, ?]] =
       column.getColumns match
         case xs if xs.isEmpty => Seq(column)
         case xs => xs.flatMap(childColumns).toSeq

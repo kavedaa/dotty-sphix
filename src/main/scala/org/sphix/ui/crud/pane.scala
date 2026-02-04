@@ -185,7 +185,7 @@ abstract class CrudPane(
   icons: CrudIcons)
   extends BorderPane {
 
-  def table: TableView[_]
+  def table: TableView[?]
   def content: Node
 
   val addAction = new Action(texts.Add + "...", _ => add()) { icons.Add.foreach(x => setGraphic(new ImageView(x))) }

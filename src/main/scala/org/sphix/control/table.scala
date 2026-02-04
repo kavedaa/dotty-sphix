@@ -250,11 +250,11 @@ trait TableUtils[S]:
   class HeaderColumn(prefWidth: Option[Double])(text: String, subColumns: TableColumn[S, ?]*)
     extends TableColumn[S, Nothing](text):
     
-    def this(text: String, subColumns: TableColumn[S, _]*) =
-      this(None)(text, subColumns: _*)
+    def this(text: String, subColumns: TableColumn[S, ?]*) =
+      this(None)(text, subColumns*)
     
     prefWidth.foreach(setPrefWidth)
-    getColumns.addAll(subColumns: _*)
+    getColumns.addAll(subColumns*)
 
   //  don't really think this works that well as the text rendering is not very good
   // trait VerticalHeaderText:

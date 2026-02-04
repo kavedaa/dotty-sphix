@@ -77,7 +77,7 @@ trait FileChoosing:
     fileChooser
 
   private def ensureExtension(file: File, extension: String): File =
-    if (!(file.getName endsWith ("." + extension))) new File(file.getAbsolutePath + extension) else file
+    if (!file.getName.endsWith("." + extension)) new File(file.getAbsolutePath + extension) else file
 
 end FileChoosing
 

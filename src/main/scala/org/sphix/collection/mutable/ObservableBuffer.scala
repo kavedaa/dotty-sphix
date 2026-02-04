@@ -87,7 +87,7 @@ object ObservableBuffer extends SeqFactory[ObservableBuffer]:
   
   def from[A](source: IterableOnce[A]): ObservableBuffer[A] = 
     val list = javaList[A]
-    source.iterator.asJava forEachRemaining { x => list add x }
+    source.iterator.asJava forEachRemaining { x => list.addAll(x) }
     new ObservableBuffer(list)
 
   def apply[A](elementChange: A => Observable): ObservableBuffer[A] = 

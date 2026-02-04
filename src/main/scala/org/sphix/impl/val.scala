@@ -36,15 +36,15 @@ trait FirableVal[A] extends Val[A] with ValImpl[A]:
   protected def currentValue: A
 
   def fire() =
-    invalidationListeners.toSeq.foreach(_ invalidated this)
-    changeListeners.toSeq.foreach(_ changed (this, currentValue, getValue))
+    invalidationListeners.toSeq.foreach(_.invalidated(this))
+    changeListeners.toSeq.foreach(_.changed(this, currentValue, getValue))
 
 
 trait LazyVal[A] extends FirableVal[A]:
 
   protected def compute: A      
 
-  protected var value: A = _
+  protected var value: A = scala.compiletime.uninitialized
 
   protected var valid = false
 

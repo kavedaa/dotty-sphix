@@ -24,7 +24,7 @@ class DelayedVal[A](source: ObservableValue[A], duration: Duration)
       thread
 
   val executor = new ScheduledThreadPoolExecutor(1, THREAD_FACTORY)
-  var future: Option[Future[_]] = None
+  var future: Option[Future[?]] = None
 
   val invalidator: Runnable = 
     () =>
@@ -33,7 +33,7 @@ class DelayedVal[A](source: ObservableValue[A], duration: Duration)
       }
 
   source observe {
-    future.foreach(_ cancel false)
+    future.foreach(_.cancel(false))
     future = Some(executor.schedule(invalidator, duration.toNanos, TimeUnit.NANOSECONDS))
   }
 

@@ -53,7 +53,7 @@ trait TextFieldTableCell[S, T, D] extends TableCell[S, T] with DataCell[T, D]:
     else {
       if (isEditing()) {
         if (textField != null) {
-          textField setText converter.convert(getItem).orNull
+          textField.setText(converter.convert(getItem).orNull)
         }
         setText(null)
         setGraphic(textField)
@@ -76,7 +76,7 @@ trait TextFieldListCell[T] extends ListCell[T] { cell =>
       def handle(t: KeyEvent) = {
         t match {
           case t if new KeyCodeCombination(KeyCode.ENTER) `match` t =>
-            converter deconvert getText map commitEdit
+            converter.deconvert(getText).foreach(commitEdit)
           case t if new KeyCodeCombination(KeyCode.ESCAPE) `match` t => cell.cancelEdit()
           case _ =>
         }
@@ -87,7 +87,7 @@ trait TextFieldListCell[T] extends ListCell[T] { cell =>
   override def startEdit() = {
     if (isEditable && getListView.isEditable) {
       super.startEdit()
-      textField setText (converter convert getItem)
+      textField.setText(converter.convert(getItem))
       setText(null)
       setGraphic(textField)
       textField.requestFocus()
@@ -102,7 +102,7 @@ trait TextFieldListCell[T] extends ListCell[T] { cell =>
 
   override def cancelEdit() = {
     super.cancelEdit()
-    setText(converter convert getItem)
+    setText(converter.convert(getItem))
     setGraphic(null)
   }
 
@@ -115,13 +115,13 @@ trait TextFieldListCell[T] extends ListCell[T] { cell =>
     else {
       if (isEditing()) {
         if (textField != null) {
-          textField setText (converter convert getItem)
+          textField.setText(converter.convert(getItem))
         }
         setText(null)
         setGraphic(textField)
       }
       else {
-        setText(converter convert getItem)
+        setText(converter.convert(getItem))
         setGraphic(null)
       }
     }

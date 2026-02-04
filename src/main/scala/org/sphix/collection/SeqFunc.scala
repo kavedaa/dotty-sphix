@@ -13,20 +13,20 @@ abstract class SeqFunc[A](dependencies: jfxb.Observable*) extends ObservableSeqI
 
   def compute: Iterable[A]
 
-  def toObservableList = FXCollections unmodifiableObservableList observableList
+  def toObservableList = FXCollections.unmodifiableObservableList(observableList)
 
-  def reEvaluate() = { observableList setAll compute.asJavaCollection }
+  def reEvaluate() = { observableList.setAll(compute.asJavaCollection) }
 
   private val listener = new InvalidationListener {
     def invalidated(o: jfxb.Observable) =
       reEvaluate()    
   }
 
-  dependencies foreach { _ addListener listener }
+  dependencies foreach { _.addListener(listener) }
 
   compute match {
     //  TODO we could make this the underlying list instead??? 
-    case os: ObservableSeq[_] => os addListener listener
+    case os: ObservableSeq[_] => os.addListener(listener)
     case _ =>
   }
   

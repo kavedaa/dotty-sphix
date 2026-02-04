@@ -1,7 +1,18 @@
 package org.sphix.control
 
-import javafx.scene.control._
+import javafx.scene.control.{ TreeTableView, TreeTableColumn, TreeTableCell }
 import javafx.beans.value.ObservableValue
+
+import org.sphix.control.*
+import org.sphix.control.cell.*
+
+trait TreeTableColumnCells[S, T]:
+
+  //  Primitive
+
+  trait StringCell[A](using val toData: To[T, A])(using asOption: AsOption[A, String]) extends TreeTableCell[S, T] with cell.StringCell[T]:
+    override def dataValue(x: T) = asOption(toData(x))
+
 
 trait TreeTableUtils[S]:
   this: TreeTableView[S] =>
@@ -22,11 +33,11 @@ trait TreeTableUtils[S]:
     def setCell(tableCell: => TreeTableCell[S, T]) = 
       setCellFactory(_ => tableCell)    
 
-  class HeaderColumn(prefWidth: Option[Double])(text: String, subColumns: TreeTableColumn[S, _]*)
+  class HeaderColumn(prefWidth: Option[Double])(text: String, subColumns: TreeTableColumn[S, ?]*)
     extends TreeTableColumn[S, Nothing](text):
     
-    def this(text: String, subColumns: TreeTableColumn[S, _]*) =
-      this(None)(text, subColumns: _*)
+    def this(text: String, subColumns: TreeTableColumn[S, ?]*) =
+      this(None)(text, subColumns*)
     
     prefWidth.foreach(setPrefWidth)
-    getColumns.addAll(subColumns: _*)
+    getColumns.addAll(subColumns*)

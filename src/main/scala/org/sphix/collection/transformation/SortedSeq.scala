@@ -12,7 +12,7 @@ class SortedSeq[A](source: ObservableSeq[A])
 
   def setComparator(comparator: ObservableValue[java.util.Comparator[A]]) = {
     observableList.comparatorProperty.unbind()
-    observableList.comparatorProperty bind comparator
+    observableList.comparatorProperty.bind(comparator)
   }
 
   def toObservableList = observableList

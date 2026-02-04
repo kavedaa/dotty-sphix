@@ -48,14 +48,15 @@ class TempFilteredSeq[A](source: ObservableSeq[A], predicate: ObservableValue[A 
     //	val filtered: Seq[A] = source filter predicate.getValue		//	weird behaviour
     val p = predicate.getValue
     val filtered = source filter p
-    observableList setAll filtered.asJava
+    observableList.setAll(filtered.asJava)
   }
 
-  predicate addListener new InvalidationListener {
-    def invalidated(o: Observable) = {
-      refilter()
-    }
-  }
+  predicate.addListener:
+    new InvalidationListener {
+      def invalidated(o: Observable) = {
+        refilter()
+      }
+    } 
 
   source onChange {
     _ foreach {
