@@ -37,12 +37,13 @@ class Demo extends SimpleApp:
   val defaultButton = new Button("A")
   val optionButton = new Button("Option[A]")
   val tryButton = new Button("Try[A]")
+  val optionTryButton = new Button("Option[Try[A]]")
   val unitTryButton = new Button("Try[Unit]")
   val tryIterableButton = new Button("Iterable[Try[A]]")
   val itemTryIterableButton = new Button("Iterable[(A, Try[A])]")
   val itemUnitTryIterableButton = new Button("Iterable[(A, Try[Unit])]")
 
-  val root = new ToolBar(defaultButton, optionButton, tryButton, unitTryButton, tryIterableButton, itemTryIterableButton, itemUnitTryIterableButton)
+  val root = new ToolBar(defaultButton, optionButton, tryButton, optionTryButton, unitTryButton, tryIterableButton, itemTryIterableButton, itemUnitTryIterableButton)
 
   defaultButton.setOnAction: _ =>
     val res = Generator("Foo").generate(1).head
@@ -56,6 +57,11 @@ class Demo extends SimpleApp:
 
   tryButton.setOnAction: _ =>
     val res = Generator("Foo").andThen[Try].generate(1).head
+    println(res)
+    Responding.respondWith(x => s"Generated $x")(res)
+
+  optionTryButton.setOnAction: _ =>
+    val res = Generator("Foo").andThen[Try].andThen[Option].generate(1).head
     println(res)
     Responding.respondWith(x => s"Generated $x")(res)
 

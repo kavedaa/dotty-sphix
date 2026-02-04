@@ -4,9 +4,10 @@ import javafx.scene.Node
 import javafx.scene.layout.*
 import javafx.scene.control.*
 import javafx.geometry.*
-import java.text.Normalizer.Form
 
-trait FormUtils:
+import org.sphix.layout.LayoutUtils
+
+trait FormUtils extends LayoutUtils:
 
   def boxGap = 15
   def elemGap = 10
@@ -127,6 +128,13 @@ trait FormUtils:
     setHgap(elemGap)
     setVgap(elemGap)
     setPadding(new Insets(boxGap))
+
+  def titled(title: String, node: Node, collapsible: Boolean = false) =
+    new TitledPane(title, node):
+      val stack = new StackPane(node)
+      stack.setPadding(new Insets(padding))
+      setContent(stack)
+      setCollapsible(collapsible)
 
 object FormUtils extends FormUtils
 

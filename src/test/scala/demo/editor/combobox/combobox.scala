@@ -42,16 +42,13 @@ object ComboBoxDemo extends BorderPane with RegionUtils:
 
 
   plainOptionalButton.setOnAction: _ =>    
-    given EditorFactory[String] = new EditorFactory.ComboBox(persons)
-    EditorFactory[Option[String]].toDialog.showAndWait().ifPresent(println)
+    EditorFactory.ComboBoxOption(persons).toDialog.showAndWait().ifPresent(println)
 
   searchableOptionalButton.setOnAction: _ =>    
-    given EditorFactory[String] = new EditorFactory.ComboBox(persons)(using new ComboBoxFactory.Searchable)
-    EditorFactory[Option[String]].toDialog.showAndWait().ifPresent(println)
+    EditorFactory.ComboBoxOption(persons)(using new ComboBoxFactory.Searchable).toDialog.showAndWait().ifPresent(println)
 
   editableOptionalButton.setOnAction: _ =>    
-    given EditorFactory[String] = new EditorFactory.ComboBox(persons)(using new ComboBoxFactory.Editable)
-    EditorFactory[Option[String]].toDialog.showAndWait().ifPresent(println)
+    EditorFactory.ComboBoxOption(persons)(using new ComboBoxFactory.Editable).toDialog.showAndWait().ifPresent(println)
 
 
   plainOptionButton.setOnAction: _ =>    

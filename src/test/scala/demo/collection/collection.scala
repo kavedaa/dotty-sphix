@@ -6,7 +6,8 @@ import javafx.scene.control.*
 import org.sphix.*
 import org.sphix.collection.*
 import org.sphix.collection.mutable.ObservableBuffer
-import org.sphix.control.derivedTableView
+import org.sphix.control.*
+import org.sphix.control.given
 import org.sphix.ui.crud.*
 
 import no.vedaadata.generator.*
