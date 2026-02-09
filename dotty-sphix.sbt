@@ -4,7 +4,7 @@ organization := "org.sphix"
 
 version := "1.21.13.94"
 
-scalaVersion := "3.8.1"
+scalaVersion := "3.3.4"
 
 resolvers += "Vedaa Data Public" at "https://mymavenrepo.com/repo/UulFGWFKTwklJGmfuD8D/"
 
