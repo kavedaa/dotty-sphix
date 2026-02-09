@@ -1,5 +1,6 @@
 package org.sphix.ui.dialog
 
+import scala.language.implicitConversions
 import scala.util.*
 import scala.jdk.FunctionConverters.*
 

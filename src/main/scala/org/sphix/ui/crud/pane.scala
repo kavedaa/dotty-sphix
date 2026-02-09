@@ -1,5 +1,6 @@
 package org.sphix.ui.crud
 
+import scala.language.implicitConversions
 import scala.jdk.CollectionConverters._
 
 import javafx.scene.Node
@@ -226,7 +227,7 @@ abstract class CrudPane(
 
     val contextActionsSeq = contextActions.to(ObservableSeq)
 
-    val contextMenu = ActionUtils.createContextMenu(contextActionsSeq)
+    val contextMenu = ActionUtils.createContextMenu(contextActionsSeq.asJava)
 
     table.setContextMenu(contextMenu)
 

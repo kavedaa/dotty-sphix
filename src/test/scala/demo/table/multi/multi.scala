@@ -1,9 +1,10 @@
 package demo.table.multi
 
-import scala.util._
+import scala.language.implicitConversions
+import scala.util.*
 
 import javafx.stage.Window
-import javafx.geometry._
+import javafx.geometry.*
 import javafx.scene.layout.BorderPane
 import javafx.scene.control.*
 

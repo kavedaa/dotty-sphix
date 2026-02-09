@@ -4,6 +4,9 @@ import scala.jdk.CollectionConverters._
 
 import javafx.collections.*
 
+
+// explicit conversions 
+
 extension [A] (xs: Iterable[A])
 
   /**
@@ -27,7 +30,9 @@ extension [A] (xs: ObservableList[A])
   def toSeq: Seq[A] = toList
 
 
-//  not sure if we should allow this explicit conversion, could be confusing
+//  implicit conversions
+
+//  not sure if we should allow this implicit conversion, could be confusing
 given [A]: Conversion[ObservableList[A], List[A]] =
   _.toList
   

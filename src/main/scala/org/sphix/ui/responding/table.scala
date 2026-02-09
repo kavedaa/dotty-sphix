@@ -1,5 +1,6 @@
 package org.sphix.ui.responding
 
+import scala.language.implicitConversions
 import scala.util.*
 
 import javafx.scene.layout.*

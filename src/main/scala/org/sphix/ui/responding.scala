@@ -1,5 +1,6 @@
 package org.sphix.ui
 
+import scala.language.implicitConversions
 import scala.util.*
 
 import javafx.scene.Node

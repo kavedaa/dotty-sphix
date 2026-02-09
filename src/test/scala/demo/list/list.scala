@@ -1,5 +1,7 @@
 package demo.list
 
+import scala.language.implicitConversions
+
 import java.time.LocalDate
 
 import javafx.application.Application

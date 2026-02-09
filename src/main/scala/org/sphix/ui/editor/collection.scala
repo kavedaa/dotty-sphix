@@ -10,8 +10,7 @@ import org.controlsfx.control.SearchableComboBox
 import org.sphix.*
 import org.sphix.util.*
 import org.sphix.control.*
-import org.sphix.collection._
-import org.sphix.collection.ObservableSeq._
+import org.sphix.collection.*
 import org.sphix.collection.mutable.ObservableBuffer
 
 // TODO make all the renders implicit
@@ -20,7 +19,7 @@ class ListViewListEditorFactory[A](items: => Iterable[A])(render: A => String)(u
   def createEditor = new Editor[List[A]]:
     type C = Container.Primitive
     val listView = new ListView[A] with ListUtils[A]:
-      setItems(ObservableSeq.from(items))
+      setItems(items.toObservableList)
       setCell(new StringCell(using x => render(x)) {})
       getSelectionModel.setSelectionMode(SelectionMode.MULTIPLE)
     def get = listView.getSelectionModel.getSelectedItems.asScala.toList
@@ -48,7 +47,7 @@ class ListViewItemEditorFactory[A](items: => Iterable[A])(render: A => String)(u
   def createEditor = new Editor[A]:
     type C = Container.Primitive
     val listView = new ListView[A] with ListUtils[A]:
-      setItems(ObservableSeq.from(items))
+      setItems(items.toObservableList)
       setCell(new StringCell(using x => render(x)) {})
       getSelectionModel.setSelectionMode(SelectionMode.SINGLE)
     def get = listView.getSelectionModel.getSelectedItem
@@ -99,7 +98,7 @@ class ComboBoxEditorFactory[A](items: => Iterable[A])(using comboBoxFactory: Com
     type C = Container.Primitive
     val comboBox = comboBoxFactory.create()
     comboBox.setMaxWidth(Int.MaxValue)
-    comboBox.setItems(ObservableSeq.from(items))
+    comboBox.setItems(items.toObservableList)
     comboBox.setConverter(comboBoxFactory.stringConverter)
     def get = comboBox.getSelectionModel.getSelectedItem
     val value = comboBox.getSelectionModel.selectedItemProperty.mapOption.map(Value.fromOption)
@@ -115,7 +114,7 @@ class ComboBoxOptionEditorFactory[A](items: => Iterable[A])(using comboBoxFactor
     type C = Container.Primitive
     val comboBox = comboBoxFactory.create()
     comboBox.setMaxWidth(Int.MaxValue)
-    comboBox.setItems(ObservableSeq.from(items))
+    comboBox.setItems(items.toObservableList)
     comboBox.setConverter(comboBoxFactory.stringConverter)
     def get = Option(comboBox.getSelectionModel.getSelectedItem)
     val value = comboBox.getSelectionModel.selectedItemProperty.mapOption.map(Value.Valid(_))

@@ -1,5 +1,7 @@
 package org.sphix.collection
 
+import scala.language.implicitConversions
+
 import javafx.collections.*
 
 import org.sphix.*
@@ -33,10 +35,10 @@ class ConversionsTest extends AnyFunSuite with Matchers:
     val dest: List[Int] = source.toList
   }
 
-  test("ObservableSeq to List - implicit conversion") {
-    val source = ObservableSeq(1, 2, 3)
-    val dest: List[Int] = source
-  }
+  // test("ObservableSeq to List - implicit conversion") {
+  //   val source = ObservableSeq(1, 2, 3)
+  //   val dest: List[Int] = source
+  // }
 
   test("Iterable to JFX ObservableList - extension method") {
     val source = Seq(1, 2, 3)

@@ -3,7 +3,7 @@ package org.sphix.control
 import javafx.scene.input._
 import javafx.scene.control._
 
-import org.sphix.collection.mutable.ObservableBuffer._
+import org.sphix.collection.*
 
 trait CellCopyable:
   this: TableView[?] =>
@@ -45,10 +45,10 @@ trait CellCopyable:
     def childColumns(column: TableColumn[?, ?]): Seq[TableColumn[?, ?]] =
       column.getColumns match
         case xs if xs.isEmpty => Seq(column)
-        case xs => xs.flatMap(childColumns).toSeq
+        case xs => xs.toList.flatMap(childColumns)
 
     val cells = getSelectionModel.getSelectedCells
-    val rows = cells.groupBy(_.getRow)
+    val rows = cells.toList.groupBy(_.getRow)
     val matrix = rows.toSeq.sortBy(_._1).map(_._2.sortBy(_.getColumn))
     matrix map { row =>
       row.toSeq map { tp =>

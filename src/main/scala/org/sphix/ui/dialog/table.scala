@@ -1,5 +1,7 @@
 package org.sphix.ui.dialog
 
+import scala.language.implicitConversions
+
 import javafx.scene.Node
 import javafx.scene.control._
 import javafx.scene.layout._

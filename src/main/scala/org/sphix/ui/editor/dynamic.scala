@@ -11,7 +11,7 @@ class DynamicEditorFactory[A](init: Int = 0)(using itemEditorFactory: EditorFact
   private class DynamicEditor extends Editor[List[A]]:
     private val editors = ObservableBuffer[Editor[A]](x => x.status)
     private val containers = ObservableBuffer[Container]()
-    def get = editors.map(_.get)
+    def get = editors.toList.map(_.get)
     val status = editors(e => Status.sequence(e.map(_.status())))
     val value = editors(e => Value.sequence(e.map(_.value()), get))
     def set(items0: List[A]) = 

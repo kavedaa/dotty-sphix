@@ -1,5 +1,7 @@
 package demo.editor.table.editable
 
+import scala.language.implicitConversions
+
 import scala.jdk.CollectionConverters.*
 
 import javafx.scene.control.*

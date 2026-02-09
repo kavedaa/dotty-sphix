@@ -1,5 +1,7 @@
 package demo.observable
 
+import scala.language.implicitConversions
+
 import javafx.application.*
 import javafx.scene.control.*
 

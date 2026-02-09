@@ -1,6 +1,7 @@
 package demo.table.mixin
 
-import scala.util._
+import scala.language.implicitConversions
+import scala.util.*
 
 import java.time.*
 import java.time.format.*

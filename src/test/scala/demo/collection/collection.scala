@@ -26,7 +26,7 @@ class Demo extends SimpleApp:
   val persons = ObservableBuffer.from(generator.generate(10))
 
   def add() = 
-    generator.next().foreach(persons.add)
+    generator.next().foreach(persons.addOne)
 
   def delete() =     
     pane.selectedItem().foreach: person =>

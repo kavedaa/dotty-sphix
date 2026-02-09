@@ -4,7 +4,7 @@ organization := "org.sphix"
 
 version := "1.21.13.94"
 
-scalaVersion := "3.3.4"
+scalaVersion := "3.8.1"
 
 resolvers += "Vedaa Data Public" at "https://mymavenrepo.com/repo/UulFGWFKTwklJGmfuD8D/"
 
@@ -21,7 +21,7 @@ libraryDependencies += "org.controlsfx" % "controlsfx" % "11.2.0"
 
 //  Text/Excel utilities
 
-libraryDependencies += "no.vedaadata" %% "text-util" % "1.0.1"
+libraryDependencies += "no.vedaadata" %% "text-util" % "1.1.0"
 libraryDependencies += "no.vedaadata" %% "excel-util" % "0.9.2"
 
 //  Various test/demo dependencies
@@ -35,4 +35,4 @@ Test / run / fork := true
 
 publishTo := Some("Vedaa Data Public publisher" at "https://mymavenrepo.com/repo/zPAvi2SoOMk6Bj2jtxNA/")
 
-// scalacOptions += "-explain"
+scalacOptions ++= Seq("-explain", "-feature", "-deprecation")

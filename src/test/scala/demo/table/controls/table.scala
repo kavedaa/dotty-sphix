@@ -1,5 +1,7 @@
 package demo.table.controls
 
+import scala.language.implicitConversions
+
 import java.net.URI
 import java.awt.Desktop
 

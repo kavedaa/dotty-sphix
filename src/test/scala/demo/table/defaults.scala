@@ -1,5 +1,7 @@
 package demo.table
 
+import scala.language.implicitConversions
+
 import java.time.*
 
 import javafx.stage.Window

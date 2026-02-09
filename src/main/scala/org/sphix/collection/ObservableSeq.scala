@@ -117,11 +117,11 @@ object ObservableSeq extends SeqFactory[ObservableSeq] {
 
   //  collection conversions
 
-  given [A]: Conversion[ObservableSeq[A], ObservableList[A]] =
-    _.toObservableList
-
   def fromObservableList[A](ol: ObservableList[A]): ObservableSeq[A] = 
     org.sphix.collection.immutable.ObservableSeq.fromObservableList(ol)
+
+  given [A]: Conversion[ObservableSeq[A], ObservableList[A]] =
+    _.toObservableList
 
   given [A]: Conversion[ObservableList[A], ObservableSeq[A]] =
     xs => fromObservableList(xs)
@@ -129,7 +129,7 @@ object ObservableSeq extends SeqFactory[ObservableSeq] {
   given [A]: Conversion[Iterable[A], ObservableSeq[A]] = 
     xs => fromObservableList(FXCollections.observableList(xs.toList.asJava))
 
-  //  scala.Seq is now the immutable Seq, therefore we need an implicit conversion
-  given [A]: Conversion[ObservableSeq[A], List[A]] = 
-    _.toList
+  // //  scala.Seq is now the immutable Seq, therefore we need an implicit conversion
+  // given [A]: Conversion[ObservableSeq[A], List[A]] = 
+  //   _.toList
 }

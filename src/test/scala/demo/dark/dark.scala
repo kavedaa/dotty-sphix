@@ -1,5 +1,6 @@
 package demo.dark
 
+import scala.language.implicitConversions
 import scala.concurrent.ExecutionContext.Implicits.global
 
 import javafx.application.Application

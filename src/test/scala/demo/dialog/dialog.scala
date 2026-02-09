@@ -1,5 +1,7 @@
 package demo.dialog
 
+import scala.language.implicitConversions
+
 import javafx.application.Application
 import javafx.scene.control.*
 

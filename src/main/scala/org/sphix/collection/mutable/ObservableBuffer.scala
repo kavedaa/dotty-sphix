@@ -122,4 +122,4 @@ object ObservableBuffer extends SeqFactory[ObservableBuffer]:
 
   //  conversions
 
-  implicit def fromObservableList[A](ol: ObservableList[A]): ObservableBuffer[A] = new ObservableBuffer(ol)
+def fromObservableList[A](ol: ObservableList[A]): ObservableBuffer[A] = new ObservableBuffer(ol)
