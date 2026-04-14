@@ -56,7 +56,7 @@ class PersonPane(add: Crud.Op, delete: Crud.Op, refresh: Crud.Op)(using CrudText
   with CrudPane.Delete(delete)
   with CrudPane.Refresh(refresh):
 
-  val table = summon[TableView[Person]]
+  val table = derivedTable[Person]
   table.getSelectionModel.setSelectionMode(SelectionMode.MULTIPLE)
 
   def content = table

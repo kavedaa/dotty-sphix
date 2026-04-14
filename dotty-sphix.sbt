@@ -2,7 +2,7 @@ name := "sphix"
 
 organization := "org.sphix"
 
-version := "1.21.13.94"
+version := "1.21.13.95"
 
 scalaVersion := "3.3.4"
 
@@ -26,7 +26,7 @@ libraryDependencies += "no.vedaadata" %% "excel-util" % "0.9.2"
 
 //  Various test/demo dependencies
 
-libraryDependencies += "no.vedaadata" %% "generator-util" % "0.9.4" % "test"
+libraryDependencies += "no.vedaadata" %% "generator-util" % "0.9.6" % "test"
 libraryDependencies += "no.vedaadata" %% "xml-util" % "0.9.2" % "test"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.10" % "test"

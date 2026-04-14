@@ -15,7 +15,7 @@ import no.vedaadata.generator.Generator
 import org.sphix.* 
 import org.sphix.control.Spring
 import org.sphix.collection.ObservableSeq
-import org.sphix.control.given
+import org.sphix.control.derivedTable
 import org.sphix.concurrent.FutureModal
 import org.sphix.ui.editor.EditorFactory
 import org.sphix.util.DarkMode
@@ -80,7 +80,7 @@ class TablePane extends BorderPane:
 
   val persons = Person.generator.generate(100).to(ObservableSeq)
 
-  val table = summon[TableView[Person]]
+  val table = derivedTable[Person]
   table.setItems(persons)
 
   setCenter(table)

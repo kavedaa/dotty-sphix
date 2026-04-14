@@ -10,7 +10,6 @@ import no.vedaadata.text.Format
 
 import org.sphix.*
 import org.sphix.control.*
-import org.sphix.control.given
 import org.sphix.collection.*
 
 @main def main() =
@@ -18,14 +17,14 @@ import org.sphix.collection.*
 
 class DerivedTableDemo extends SimpleApp:
 
-  val persons = Generator.generate[Person](100).to(ObservableSeq)
+  val persons = Person.generator.generate(100).to(ObservableSeq)
 
   given org.sphix.control.cell.To[Pet, String] = 
     pet => pet.name
 
   given Format.BigDecimalFormat = java.text.DecimalFormat("0.00")
 
-  val table = summon[TableView[Person]]
+  val table = derivedTable[Person]
   table.setItems(persons)
 
   def root = table

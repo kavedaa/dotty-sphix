@@ -6,12 +6,12 @@ import scala.jdk.CollectionConverters.*
 import java.io.*
 import java.time.*
 
+import javafx.stage.Window
 import javafx.util.Callback
 import javafx.beans.value.ObservableValue
 import javafx.scene.control.*
 
-import org.apache.poi.ss.usermodel.Row
-import org.apache.poi.ss.usermodel.CellStyle
+import org.apache.poi.ss.usermodel.{ Row, CellStyle, Workbook }
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 import no.vedaadata.excel.*
@@ -19,53 +19,36 @@ import no.vedaadata.text.LabelTransformer
 
 import org.sphix.control.cell.DataCell
 import org.sphix.control.cell.DataType
-import org.apache.poi.ss.usermodel.Workbook
-import org.sphix.ui.editor.EditorFactory
 
 object TableExcel:
 
-  enum Selection:
-    case All, Selected
-
-  given (using labelTransformer: LabelTransformer): EditorFactory[Selection] =
-    new EditorFactory.RadioItem(Selection.values)(x => labelTransformer(x.toString))
-
-  trait Options:
-    def rows: Selection
-    def columns: Selection
+  case class Options(
+    rows: Options.Rows,
+    columns: Options.Columns)
 
   object Options:
 
-    case class Rows(
-      rows: Selection)
-      extends Options:
-        def columns = Selection.All
+    enum Rows:
+      case All, Selected
 
-    object Rows:
-      def Default = Rows(Selection.All)
+    enum Columns:
+      case All
+      case Include(columnPaths: List[ColumnPath])
 
-    case class Columns(
-      columns: Selection)
-      extends Options:
-        def rows = Selection.All
-
-    object Columns:
-      def Default = Columns(Selection.All)
-
-    case class RowsAndColumns(
-      rows: Selection,
-      columns: Selection)
-      extends Options
-
-    object RowsAndColumns:
-      def Default = RowsAndColumns(Selection.All, Selection.All)
-
-    def Default = RowsAndColumns.Default
+    val Default = Options(Rows.All, Columns.All)
+  
 
   opaque type WidthFactor <: Double = Double
 
   object WidthFactor:
+
     given default: WidthFactor = 50.0
+
+  def optionsDialog(table: TableView[?])(using Window): TableExcelOptionsDialog =
+    new TableExcelOptionsDialog(table)
+
+  def getColumnPaths(table: TableView[?]): List[ColumnPath] =
+    table.getColumns.asScala.toList.flatMap(ColumnPath.leafs)
 
   def writeFile(file: File, table: TableView[?], options: Options = Options.Default)(using WidthFactor): Try[File] =
 
@@ -75,11 +58,11 @@ object TableExcel:
 
     given baseCellStyle: CellStyle = wb.createCellStyle()
 
-    val allColumnPaths = table.getColumns.asScala.toList.filter(_.isVisible).flatMap(ColumnPath.leafs)
+    val allColumnPaths = getColumnPaths(table)
 
     val columnPaths = options.columns match
-      case Selection.All => allColumnPaths
-      case Selection.Selected => allColumnPaths.filter(x => table.getSelectionModel.getSelectedCells.asScala.map(_.getTableColumn).distinct.contains(x.leaf))
+      case Options.Columns.All => allColumnPaths
+      case Options.Columns.Include(columnPaths) => columnPaths
 
     val columnDatas = ColumnData.fromColumnPaths(columnPaths)(baseCellStyle)
 
@@ -90,8 +73,8 @@ object TableExcel:
       createCell(columnData.index, columnData.title)(using headerRow)
 
     val items = options.rows match
-      case Selection.All => table.getItems
-      case Selection.Selected => table.getSelectionModel.getSelectedItems
+      case Options.Rows.All => table.getItems
+      case Options.Rows.Selected => table.getSelectionModel.getSelectedItems
 
     items.asScala.toList.zipWithIndex.foreach: (item, index) =>
       given Row = sheet.createRow(index + 1)  
@@ -129,6 +112,8 @@ object TableExcel:
     finally
       wb.close()
       fos.close()
+
+  end writeFile
 
   private case class ColumnData(
     column: TableColumn[Any, Any],
@@ -168,13 +153,14 @@ object TableExcel:
       case _ => CellStyleProvider.default
     
 
-  private case class ColumnPath(leaf: TableColumn[?, ?], path: List[TableColumn[?, ?]]):
+  case class ColumnPath(leaf: TableColumn[?, ?], path: List[TableColumn[?, ?]]):
     private def children: List[ColumnPath] = leaf match
       case c if c.getColumns.isEmpty => List(this)
       case c => c.getColumns.asScala.toList.flatMap(column => ColumnPath(column, fullPath).children)
     private val fullPath = leaf +: path
     def titles = fullPath.reverse.map(_.getText)
     def fullTitle = titles.mkString(", ")
+    override def toString = fullTitle
 
   private object ColumnPath:
     def leafs(column: TableColumn[?, ?]) = ColumnPath(column, Nil).children

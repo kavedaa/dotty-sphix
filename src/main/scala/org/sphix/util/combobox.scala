@@ -12,6 +12,11 @@ object ComboBoxFactory:
 
   given default[A >: Null](using converter: HalfConverter[A, String]): ComboBoxFactory[A] = new Default
 
+  def apply[A >: Null](comboBox: => ComboBox[A])(using converter: HalfConverter[A, String]): ComboBoxFactory[A] = 
+    new ComboBoxFactory[A]:
+      def stringConverter = converter.toStringConverter
+      def create() = comboBox
+
   class Default[A >: Null](using val converter: HalfConverter[A, String]) extends ComboBoxFactory[A]:
     def stringConverter = converter.toStringConverter
     def create() = new ComboBox[A]

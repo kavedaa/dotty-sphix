@@ -12,6 +12,7 @@ import org.sphix.util.*
 import org.sphix.control.*
 import org.sphix.collection.*
 import org.sphix.collection.mutable.ObservableBuffer
+import org.controlsfx.control.CheckComboBox
 
 // TODO make all the renders implicit
 
@@ -25,7 +26,7 @@ class ListViewListEditorFactory[A](items: => Iterable[A])(render: A => String)(u
     def get = listView.getSelectionModel.getSelectedItems.asScala.toList
     val value = listView.getSelectionModel.getSelectedItems.asVal.map(Value.Valid.apply)
     val status = Val(Status.Valid)
-    def set(xs: List[A]) = xs foreach listView.getSelectionModel.select
+    def set(xs: List[A]) = xs.foreach(listView.getSelectionModel.select)
     def clear() = listView.getSelectionModel.clearSelection()
     def container(label: Option[String]) = Container.Primitive(this, label, listView)
 
@@ -42,6 +43,24 @@ class CheckBoxListEditorFactory[A](items: => Iterable[A])(render: A => String)(u
     def set(xs: List[A]) = xs.foreach { x => itemCheckboxes.find((cb, item) => item == x) foreach { (cb, item) => cb.setSelected(true) } }
     def clear() = itemCheckboxes.foreach { (cb, item) => cb.setSelected(false) }
     def container(label: Option[String]) = Container.MultiPrimitive(this, label, itemCheckboxes.map(_._1))
+
+class ComboCheckBoxEditorFactory[A](items: => Iterable[A])(render: A => String)(using Layouter[Container.Primitive]) extends EditorFactory[List[A]]:
+  def createEditor = new ComboCheckBoxEditor[A](items)(render)
+
+class ComboCheckBoxEditor[A](items: => Iterable[A])(render: A => String)(using Layouter[Container.Primitive]) extends Editor[List[A]]:
+  type C = Container.Primitive
+  val comboBox = new CheckComboBox[A]:
+    getItems.addAll(items.asJavaCollection)
+    setConverter: 
+      new StringConverter[A]:
+        def toString(item: A) = render(item)
+        def fromString(string: String) = throw new UnsupportedOperationException("Not needed")
+  def get = comboBox.getCheckModel.getCheckedItems.asScala.toList
+  val value = get.toVal.map(Value.Valid.apply)
+  val status = Val(Status.Valid)
+  def set(xs: List[A]) = xs.foreach(comboBox.getCheckModel.check)
+  def clear() = comboBox.getCheckModel.clearChecks()
+  def container(label: Option[String]) = Container.Primitive(this, label, comboBox)
 
 class ListViewItemEditorFactory[A](items: => Iterable[A])(render: A => String)(using Layouter[Container.Primitive]) extends EditorFactory[A]:
   def createEditor = new Editor[A]:

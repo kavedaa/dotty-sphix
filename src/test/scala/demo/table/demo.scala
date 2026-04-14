@@ -10,7 +10,7 @@ import javafx.scene.layout.*
 import org.sphix.*
 import org.sphix.ui.*
 import org.sphix.ui.dialog.EditorDialog
-import org.sphix.excel.TableExcel
+import org.sphix.excel.*
 import org.sphix.concurrent.FutureModal
 
 @main def main() = Application.launch(classOf[TableDemoApp])
@@ -30,14 +30,16 @@ class TableDemoBase[A](val table: TableView[A])(using Window):
   pane.setTop(toolbar)
   pane.setCenter(table)
 
-  excelButton.setOnAction: _ =>
-    EditorDialog[TableExcel.Options.RowsAndColumns]("Export").withInitialValue(TableExcel.Options.RowsAndColumns.Default).showAndWait().ifPresent: options =>
-      FileChoosing.withFileForSave("Excel", "xlsx"): file =>
-        FutureModal("Exporting..."):
-          TableExcel.writeFile(file, table, options)
-        .onComplete: res =>
-          Responding.respondWith(x => s"Exported to $x")(res)  
+  def exportWithOptions(options: TableExcel.Options): Unit =
+    FileChoosing.withFileForSave("Excel", "xlsx"): file =>
+      FutureModal("Exporting..."):
+        TableExcel.writeFile(file, table, options)
+      .onComplete: res =>
+        Responding.respondWith(x => s"Exported to $x")(res)
 
+  excelButton.setOnAction: _ =>
+    TableExcel.optionsDialog(table).showAndWait().ifPresent: options =>
+      exportWithOptions(options)
 
 class TableDemoApp extends SimpleApp2("Table demos"):
 

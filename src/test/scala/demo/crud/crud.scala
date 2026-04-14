@@ -7,11 +7,12 @@ import javafx.scene.control.*
 
 import org.sphix.*
 import org.sphix.collection.toObservableList
-import org.sphix.control.derivedTableView
+import org.sphix.control.derivedTable
 import org.sphix.ui.crud.*
 
 import no.vedaadata.generator.*
 import org.sphix.collection.mutable.ObservableBuffer
+import org.sphix.control.derivedTable
 
 @main def main = Application.launch(classOf[Demo])
 
@@ -60,7 +61,7 @@ class PersonPane(add: Crud.Op, edit: Crud.Op, delete: Crud.Op, clear: Crud.Op, r
   with CrudPane.Clear(clear)
   with CrudPane.Refresh(refresh):
 
-  val table = summon[TableView[Person]]
+  val table = derivedTable[Person]
   table.getSelectionModel.setSelectionMode(SelectionMode.MULTIPLE)
 
   def content = table

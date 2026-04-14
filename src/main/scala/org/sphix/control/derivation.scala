@@ -11,7 +11,7 @@ import org.sphix.*
 import org.sphix.collection.*
 
 
-class DerivedTableView[S <: Product](labels: List[String], cellFactories: List[TableCellFactory[S, Any]], labelTransformer: LabelTransformer) extends TableView[S]:
+class DerivedTable[S <: Product](labels: List[String], cellFactories: List[TableCellFactory[S, Any]], labelTransformer: LabelTransformer) extends TableView[S]:
   val columns = labels.zip(cellFactories).zipWithIndex.map: 
     case ((label, cellFactory), index) =>
       new TableColumn[S, Any]:
@@ -20,8 +20,8 @@ class DerivedTableView[S <: Product](labels: List[String], cellFactories: List[T
         setCellFactory(cellFactory)
   getColumns.addAll(columns.toObservableList)
 
-inline given derivedTableView[S <: Product](using m: Mirror.ProductOf[S])(using labelTransformer: LabelTransformer): TableView[S] =
+inline def derivedTable[S <: Product](using m: Mirror.ProductOf[S])(using labelTransformer: LabelTransformer): TableView[S] =
   val labels = constValueTuple[m.MirroredElemLabels].toList.asInstanceOf[List[String]]
   type CellFactories = Tuple.Map[m.MirroredElemTypes, [X] =>> TableCellFactory[S, X]]
   val cellFactories = summonAll[CellFactories].toList.asInstanceOf[List[TableCellFactory[S, Any]]]
-  new DerivedTableView[S](labels, cellFactories, labelTransformer)
+  new DerivedTable[S](labels, cellFactories, labelTransformer)

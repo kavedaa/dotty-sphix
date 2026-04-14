@@ -5,6 +5,7 @@ package org.sphix.util
 import scala.util.Try
 import java.text.DateFormat
 import java.text.DecimalFormat
+import no.vedaadata.text.Format.BigDecimalFormat
 
 trait Converters:
 
@@ -15,6 +16,13 @@ trait Converters:
   given long: Converter[Long, String] with
     def convert(a: Long) = Some(a.toString)
     def deconvert(b: String) = Try(b.toLong).toOption
+
+  // TODO temporary until we have a generalized formatter
+  given bigDecimal(using format: BigDecimalFormat): Converter[BigDecimal, String] = 
+    new Converter:
+      def convert(x: BigDecimal) = Some(format.formatBigDecimal(x))
+      def deconvert(x: String) = Some(format.parseBigDecimal(x))
+
 
 
 //  for backwards comp.

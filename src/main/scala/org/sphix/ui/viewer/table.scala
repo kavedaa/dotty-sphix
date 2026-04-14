@@ -45,12 +45,6 @@ inline def table[P <: Product](using m: Mirror.ProductOf[P])(using labelTransfor
 
 class TableViewer[P <: Product](labels: List[String], cellFactories: List[TableCellFactory[P, Any]], labelTransformer: LabelTransformer) 
   extends Viewer[Iterable[P]]:
-    def apply(x: Iterable[P]) = new TableView[P]:
-      val columns = labels.zip(cellFactories).zipWithIndex.map: 
-        case ((label, cellFactory), index) =>
-          new TableColumn[P, Any]:
-            setText(labelTransformer(label))
-            setCellValueFactory(_.getValue.productElement(index).toVal)
-            setCellFactory(cellFactory)
-      getColumns.addAll(columns.toObservableList)
-      setItems(x.toObservableList)
+    def apply(x: Iterable[P]) = 
+      new DerivedTable[P](labels, cellFactories, labelTransformer):
+        setItems(x.toObservableList)

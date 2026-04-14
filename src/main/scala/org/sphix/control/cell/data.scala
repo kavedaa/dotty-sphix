@@ -1,11 +1,17 @@
 package org.sphix.control.cell
 
 import java.time._
+import org.sphix.ui.viewer.Data
 
 //  useful for tooling like e.g. export so we can determine the type of the data without having a value
 enum DataType:
   case boolean, string, byte, short, int, long, float, double, bigInt, bigDecimal, localDate, localTime, localDateTime
 
+/**
+  * 
+  * @tparam T the type of the item in the cell.
+  * @tparam D the type of the data that can be read from the cell using the [[dataValue]] method.
+  */
 trait DataCell[T, D](using dataTypeProvider: DataTypeProvider[D]) extends Cell[T]:
   def dataType: DataType = dataTypeProvider.dataType
   def dataValue(x: T): Option[D]
@@ -14,7 +20,10 @@ trait DataTypeProvider[T]:
   def dataType: DataType
 
 object DataTypeProvider:
-  
+
+  given [A](using inner: DataTypeProvider[A]): DataTypeProvider[Option[A]] with
+    def dataType = inner.dataType
+
   given DataTypeProvider[String] with
     def dataType = DataType.string
 

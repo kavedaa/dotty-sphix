@@ -1,5 +1,7 @@
 package org.sphix.util
 
+import no.vedaadata.text.Format
+
 trait HalfConverter[A, B]:
   def convert(x: A): Option[B]
 

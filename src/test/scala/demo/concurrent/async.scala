@@ -29,9 +29,9 @@ class AsyncDemo extends BorderPane with RegionUtils:
     a + b
 
   resultLabel.textProperty <== asyncAdder.status.map:
-    case Async.Status.Success(Success(y)) => y.toString
-    case Async.Status.Success(Failure(ex)) => ex.getMessage
-    case Async.Status.Failure(ex) => ex.getMessage
+    case Async.Status.Succeeded(Success(y)) => y.toString
+    case Async.Status.Succeeded(Failure(ex)) => ex.getMessage
+    case Async.Status.Failed(ex) => ex.getMessage
     case _ => null
 
   resultLabel.graphicProperty <== asyncAdder.status.map:

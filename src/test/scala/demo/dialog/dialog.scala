@@ -9,7 +9,7 @@ import org.sphix.*
 import org.sphix.util.*
 import org.sphix.util.given
 import org.sphix.ui.dialog.*
-import org.sphix.control.derivedTableView
+import org.sphix.control.derivedTable
 
 case class Person(name: String, age: Int, hobbyAsWeCanSeeIsAReallyLongLabelAndSomeMoreYesThisIsGood: Option[String])
 
@@ -28,6 +28,8 @@ class Demo extends SimpleApp:
 
   val tableDialogButton = new Button("Table dialog")
   val tableMonologButton = new Button("Table monolog")
+
+  given TableView[Person] = derivedTable[Person]
 
   tableDialogButton.setOnAction: _ =>
     val dialog = TableDialog(persons)("Persons", "These are the persons", Information, "Go for it!")

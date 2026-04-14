@@ -10,7 +10,6 @@ import org.sphix.collection.*
 import no.vedaadata.generator.Generator
 
 import demo.table.*
-import org.sphix.util.Converter
 
 
 case class Person(

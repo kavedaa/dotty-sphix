@@ -10,7 +10,7 @@ import org.sphix.*
 import org.sphix.util.*
 import org.sphix.binding.*
 
-trait CheckBoxCell extends Cell[Boolean]:
+trait CheckBoxCell extends Cell[Boolean] with DataCell[Boolean, Boolean]:
   cell =>
 
   lazy val checkbox = new CheckBox
@@ -41,6 +41,43 @@ trait CheckBoxCell extends Cell[Boolean]:
     setGraphic(checkbox)
 
 
+class TriStateModel(checked0: Boolean, indeterminate0: Boolean):
+  val checked = Var(checked0)
+  val indeterminate = Var(indeterminate0)
+  val asVal = (checked, indeterminate).tupled
+  val asOption = (checked, indeterminate).mapN((c, i) => Option.when(!i)(c))
+
+object TriStateModel:
+  def fromOption(x: Option[Boolean]) = TriStateModel(x.contains(true), x.isEmpty)
+
+trait TriStateCheckBoxCell[S, T] extends TableCell[S, T] with DataCell[T, Option[Boolean]]:
+
+  def checked(s: S): Property[Boolean]
+  def indeterminate(s: S): Property[Boolean]
+  
+  lazy val checkbox = new CheckBox:
+    setAllowIndeterminate(true)
+  
+  setAlignment(Pos.CENTER)
+
+  var checkedBinding: BidirectionalConverterBinding[java.lang.Boolean, Boolean] = null
+  var indeterminateBinding: BidirectionalConverterBinding[java.lang.Boolean, Boolean] = null
+
+  override def updateItem(item: T, empty: Boolean) =
+    super.updateItem(item, empty)
+    if !empty then
+      setGraphic(checkbox)
+      if checkedBinding != null then checkedBinding.unbind()
+      if indeterminateBinding != null then indeterminateBinding.unbind()
+      val rowItem = getTableView.getItems.get(getIndex)
+      checkedBinding = bindBidirectionalWithConverter(checkbox.selectedProperty, checked(rowItem))
+      indeterminateBinding = bindBidirectionalWithConverter(checkbox.indeterminateProperty, indeterminate(rowItem))
+    else    
+      setGraphic(null)
+
+
+// legacy
+
 trait CheckBoxTableCell[S] extends TableCell[S, Boolean] with Cell[Boolean]:
 
   def f(s: S): Property[Boolean]
@@ -63,15 +100,6 @@ object CheckBoxTableCell {
     }
   }
 }
-
-class TriStateModel(checked0: Boolean, indeterminate0: Boolean):
-  val checked = Var(checked0)
-  val indeterminate = Var(indeterminate0)
-  val asVal = (checked, indeterminate).tupled
-  val asOption = (checked, indeterminate).mapN((c, i) => Option.when(!i)(c))
-
-object TriStateModel:
-  def fromOption(x: Option[Boolean]) = TriStateModel(x.contains(true), x.isEmpty)
 
 trait TriStateCheckBoxTableCell[S, T] extends TableCell[S, T]:
 

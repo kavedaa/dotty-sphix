@@ -14,9 +14,9 @@ import org.sphix.*
 import org.sphix.util.*
 import org.sphix.control.*
 import org.sphix.collection.*
+import org.sphix.util.ComboBoxFactory
 
 import demo.table.*
-import org.sphix.util.ComboBoxFactory
 
 case class Country(
   code: String,
@@ -71,6 +71,8 @@ case class PersonModel(person0: Person):
 
   toPerson.onValue(x => println(s"----- The person is: $x"))
 
+end PersonModel
+
 class PersonTable extends TableView[PersonModel] with TableUtils[PersonModel]:
 
   val name = new Column(150)("Name", _.name):
@@ -78,27 +80,43 @@ class PersonTable extends TableView[PersonModel] with TableUtils[PersonModel]:
 
   val hobby1 = new Column("Hobby", _.hobby):
     setCell:
-      new StaticComboBoxCell(_ => hobbies.to(ObservableSeq)) {}
+      new ComboBoxCellA(_ => hobbies.to(ObservableSeq)) {}
 
   val hobby2 = new Column("Hobby", _.hobby):
     setCell:
-      new StaticComboBoxCell(using new ComboBoxFactory.Editable)(_ => hobbies.to(ObservableSeq)) {}
+      new ComboBoxCellA(using new ComboBoxFactory.Editable)(_ => hobbies.to(ObservableSeq)) {}
+
+  val hobby3 = new Column("Hobby", _.hobby):
+    setCell:
+      new ComboBoxCellA(using new ComboBoxFactory.Searchable)(_ => hobbies.to(ObservableSeq)) {}
+
+  val hobby4 = new Column("Hobby", _.hobby):
+    setCell:
+      new StaticComboBoxCellA(_ => hobbies.to(ObservableSeq)) {}
+
+  val hobby5 = new Column("Hobby", _.hobby):
+    setCell:
+      new StaticComboBoxCellA(using new ComboBoxFactory.Editable)(_ => hobbies.to(ObservableSeq)) {}
+
+  val hobby6 = new Column("Hobby", _.hobby):
+    setCell:
+      new StaticComboBoxCellA(using new ComboBoxFactory.Searchable)(_ => hobbies.to(ObservableSeq)) {}      
 
   val pet = new Column("Pet", _.pet):
     setCell:
-      new StaticComboBoxCell(using new ComboBoxFactory.Searchable)(_ => pets.to(ObservableSeq)) {}
+      new StaticComboBoxCellA(using new ComboBoxFactory.Searchable)(_ => pets.to(ObservableSeq)) {}
 
   val country = new Column("Country", _.country):
     setCell:
-      new StaticComboBoxCell(_ => countries.to(ObservableSeq)) {}
+      new StaticComboBoxCellA(_ => countries.to(ObservableSeq)) {}
 
   val city = new Column("City", _.city):
     setCell:
-      new StaticComboBoxCell(using new ComboBoxFactory.Editable)(_.availableCities) {}
+      new StaticComboBoxCellA(using new ComboBoxFactory.Editable)(_.availableCities) {}
 
   setEditable(true)
 
-  getColumns.addAll(name, hobby1, hobby2, pet, country, city)   
+  getColumns.addAll(name, hobby1, hobby2, hobby3, hobby4, hobby5, hobby6, pet, country, city)   
 
 
 class ComboBoxDemo(using Window) extends TableDemoBase(new PersonTable):

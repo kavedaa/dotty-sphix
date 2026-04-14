@@ -174,7 +174,8 @@ trait TableColumnCells[S, T]:
     def apply[D](using Converter[T, String], AsOption[T, D], DataTypeProvider[D]) = 
       new TextFieldCell[D] {}
   
-  trait CheckBoxCellA extends TableCell[S, Boolean] with cell.CheckBoxCell
+  trait CheckBoxCellA(using asDataOption: AsOption[Boolean, Boolean]) extends TableCell[S, Boolean] with cell.CheckBoxCell:
+    override def dataValue(x: Boolean) = asDataOption(x)
   
   trait CheckBoxCell(f0: S => Property[Boolean]) extends cell.CheckBoxTableCell[S]:
     def f(s: S) = f0(s)
@@ -203,6 +204,19 @@ trait TableColumnCells[S, T]:
     def factory = factory0
     def items = items0
 
+  trait ComboBoxCellA(using factory0: ComboBoxFactory[T])(items0: S => ObservableSeq[T]) extends TableCell[S, T] with cell.ComboBoxCell[S, T]:
+    def factory = factory0
+    def items(s: S) = items0(s)
+    def dataValue(x: T) = Option(factory.stringConverter.toString(x))
+    def parentIsEditable = getTableView.isEditable && getTableColumn.isEditable
+    def getItems = getTableView.getItems
+
+  trait StaticComboBoxCellA(using factory0: ComboBoxFactory[T])(items0: S => ObservableSeq[T]) extends TableCell[S, T] with cell.StaticComboBoxCell[S, T]:
+    def factory = factory0
+    def items = items0
+    def dataValue(x: T) = Option(factory.stringConverter.toString(x))
+    def parentIsEditable = getTableView.isEditable && getTableColumn.isEditable
+    def getItems = getTableView.getItems
 
   // trait ComboBox2Cell[A] extends cell.ComboBox2TableCell[S, A]
 
