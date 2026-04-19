@@ -3,8 +3,7 @@ package demo.editor.option
 import javafx.scene.layout.*
 import javafx.scene.control.*
 
-import org.sphix.ui.dialog.EditorDialog
-import org.sphix.ui.editor.EditorFactory
+import org.sphix.ui.editor.*
 
 enum Hobby:
   case Chess, Golf, Tennis

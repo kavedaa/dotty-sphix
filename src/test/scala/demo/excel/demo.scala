@@ -13,7 +13,6 @@ import org.sphix.*
 import org.sphix.excel.TableExcel
 import org.sphix.concurrent.FutureModal
 import org.sphix.ui.*
-import org.sphix.ui.dialog.EditorDialog
 import org.sphix.collection.*
 import org.sphix.control.derivedTable
 import org.sphix.excel.TableExcelOptionsDialog

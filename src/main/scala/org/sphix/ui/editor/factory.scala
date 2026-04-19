@@ -9,7 +9,6 @@ import javafx.scene.control.*
 import org.sphix.*
 import org.sphix.control.*
 import org.sphix.collection.ObservableSeq
-import org.sphix.ui.dialog.EditorDialog
 
 trait EditorFactory[A]:
   def createEditor: Editor[A]
@@ -45,9 +44,11 @@ object EditorFactory:
       new ClearableEditorFactory(self)
 
   extension [A >: Null] (self: EditorFactory[A]) 
-    def toDialog(label: Option[String], value0: Option[A]): EditorDialog[A] = new EditorDialog(label, value0)(using self)
-    def toDialog: EditorDialog[A] = toDialog(None, None)
-    def toDialog(label: String): EditorDialog[A] = toDialog(Some(label), None)
+    def toDialog(title: Option[String] = None, ok: Option[String] = None, label: Option[String] = None): EditorDialog[A] = new EditorDialog(title, ok, label)(using self)
+    def toDialog: EditorDialog[A] = toDialog(None, None, None)
+    def toDialog(title: String): EditorDialog[A] = toDialog(Some(title), None, None)
+    def toDialog(title: String, ok: String): EditorDialog[A] = toDialog(Some(title), Some(ok), None)
+    def toDialog(title: String, ok: String, label: String): EditorDialog[A] = toDialog(Some(title), Some(ok), Some(label))
 
   //  default primitive editor factories
 

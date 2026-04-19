@@ -9,7 +9,6 @@ import javafx.scene.layout.*
 
 import org.sphix.*
 import org.sphix.ui.*
-import org.sphix.ui.dialog.EditorDialog
 import org.sphix.excel.*
 import org.sphix.concurrent.FutureModal
 

@@ -8,7 +8,6 @@ import javafx.beans.value.ObservableValue
 import org.sphix.*
 import org.sphix.ui.FormUtils
 import org.sphix.ui.editor.*
-import org.sphix.ui.dialog.EditorDialog
 
 case class Person(
   firstName: String,
