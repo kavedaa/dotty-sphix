@@ -13,8 +13,10 @@ import org.sphix.concurrent.*
 import org.sphix.ui.Responding
 import org.sphix.ui.crud.*
 
+import demo.*
 
-class ModalDemo(stage: Stage) extends BorderPane:
+
+class ModalDemo(stage: Stage) extends BorderPane with Resources:
 
   given Window = stage
 
@@ -101,9 +103,6 @@ class ModalDemo(stage: Stage) extends BorderPane:
   def slowMultiply(a: Int, b: Int) = Future:
     Thread.sleep(100)
     a * b
-
-  given CrudTexts = CrudTexts.Default
-  given CrudIcons = CrudIcons.Default
 
   seqModal1Button.setOnAction: _ =>
     new SequentialFutureModal(using ModalFactory.Bar)(Some("Computing..."))(1 to 100)(x => slowMultiply(x, x))

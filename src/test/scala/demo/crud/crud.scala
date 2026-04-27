@@ -5,14 +5,16 @@ import scala.language.implicitConversions
 import javafx.application.*
 import javafx.scene.control.*
 
+import no.vedaadata.generator.*
+
 import org.sphix.*
 import org.sphix.collection.toObservableList
 import org.sphix.control.derivedTable
 import org.sphix.ui.crud.*
-
-import no.vedaadata.generator.*
 import org.sphix.collection.mutable.ObservableBuffer
 import org.sphix.control.derivedTable
+
+import demo.*
 
 @main def main = Application.launch(classOf[Demo])
 
@@ -21,10 +23,7 @@ case class Person(name: String, age: Int)
 object Person:
   given Generator[Person] = (Generator("Joe", "Tom", "Bob"), Generator.between(20, 80)).mapN(Person.apply)
 
-class Demo extends SimpleApp:
-
-  given CrudTexts = CrudTexts.Default
-  given CrudIcons = CrudIcons.Default
+class Demo extends SimpleApp with Resources:
 
   val persons = Generator[Person].generate(10).to(ObservableBuffer)
 

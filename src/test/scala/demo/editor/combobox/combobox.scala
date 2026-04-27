@@ -8,7 +8,9 @@ import org.sphix.ui.editor.EditorFactory
 import org.sphix.util.ComboBoxFactory
 import org.sphix.ui.RegionUtils
 
-object ComboBoxDemo extends BorderPane with RegionUtils:
+import demo.*
+
+object ComboBoxDemo extends BorderPane with RegionUtils with Resources:
 
   val persons = List("Alice", "Bob", "Charlie", "David", "Eva", "Francis", "Grace", "Hank", "Ivy", "Jack", "Kathy", "Lance", "Mandy", "Nancy", "Oscar", "Patty", "Quincy", "Randy", "Sandy", "Tom", "Ursula", "Vince", "Wendy", "Xander", "Yvonne", "Zack")
 

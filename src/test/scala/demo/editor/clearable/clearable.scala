@@ -17,7 +17,7 @@ case class Data(
   to: Option[LocalDate],
   distance: Double)
 
-object ClearableDemo extends BorderPane with DemoUtils:
+object ClearableDemo extends BorderPane with Resources:
 
   given stringFactory: EditorFactory[Option[String]] = (new EditorFactory.TextField[Option[String]]).clearable
   given localDateFactory: EditorFactory[Option[LocalDate]] = (new EditorFactory.DatePickerOption).clearable

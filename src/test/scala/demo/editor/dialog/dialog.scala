@@ -7,7 +7,7 @@ import org.sphix.ui.editor.*
 
 import demo.*
 
-object DialogDemo extends BorderPane with DemoUtils:
+object DialogDemo extends BorderPane with Resources:
 
   //  Showing how to use EditorDialog with different constructors and options
 

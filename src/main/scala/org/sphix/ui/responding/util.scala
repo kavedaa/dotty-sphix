@@ -4,9 +4,9 @@ import javafx.scene.layout.*
 import javafx.scene.control.*
 import javafx.scene.image.*
 
-import org.sphix.ui.crud.*
+import org.sphix.ui.*
 
-trait RespondingUtils(using texts: CrudTexts, icons: CrudIcons):
+trait RespondingUtils(using texts: RespondingTexts, icons: RespondingIcons):
 
   class FilterButtons(numSuccesses: Int, numFailures: Int):
 

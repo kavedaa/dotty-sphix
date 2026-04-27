@@ -16,7 +16,7 @@ import org.sphix.ui.crud.*
 import org.sphix.control.*
 import org.sphix.collection.ObservableSeq
 
-class ItemTryIterableResponder[A, B](using renderA: Render[A], renderB: Render[B])(using texts: CrudTexts, icons: CrudIcons) 
+class ItemTryIterableResponder[A, B](using renderA: Render[A], renderB: Render[B])(using RespondingTexts, RespondingIcons) 
   extends Responder[Iterable[(A, Try[B])]]
   with RespondingUtils:
 
@@ -42,7 +42,7 @@ class ItemTryIterableResponder[A, B](using renderA: Render[A], renderB: Render[B
     new RespondingMonolog(vb, None).showAndWait()
 
 
-class ItemTryTableView[A, B](xs: ObservableSeq[(A, Try[B])])(using renderA: Render[A], renderB: Render[B])(using texts: CrudTexts, icons: CrudIcons)
+class ItemTryTableView[A, B](xs: ObservableSeq[(A, Try[B])])(using renderA: Render[A], renderB: Render[B])(using texts: RespondingTexts, icons: RespondingIcons) 
   extends TableView[(A, Try[B])] with TableUtils[(A, Try[B])]:
 
     val iconColumn = new Column("", _._2.toVal):

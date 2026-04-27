@@ -22,6 +22,17 @@ import org.sphix.collection.ObservableSeq
 
 import org.sphix.ui.responding.*
 
+trait RespondingTexts:
+  def Item: String
+  def Result: String
+  def NumOperationsSucceeded(x: Int): String
+  def NumOperationsFailed(x: Int): String
+  def NoResults: String
+
+trait RespondingIcons:
+  def IsSuccess: Option[Image]
+  def IsFailure: Option[Image]
+
 trait Responder[-A]:
   def respond(x: A)(message: String => String): Unit
 //  def respondVerbose(x: A)(using message: String => String) = respond
@@ -35,9 +46,9 @@ object Responder:
   given optionResponder[A](using Responder[A]): Responder[Option[A]] = new OptionResponder
   given tryResponder[A](using Responder[A]): Responder[Try[A]] = new TryResponder
   given iterableResponder[A](using Render[A]): Responder[Iterable[A]] = new IterableResponder
-  given tryIterableResponder[A](using Render[A])(using CrudTexts, CrudIcons): Responder[Iterable[Try[A]]] = new TryIterableResponder
+  given tryIterableResponder[A](using Render[A])(using RespondingTexts, RespondingIcons): Responder[Iterable[Try[A]]] = new TryIterableResponder
   @deprecated given tryItemIterableResponder[A, B](using Render[A], Render[B]): Responder[Iterable[(Try[A], B)]] = new TryItemIterableResponder
-  given itemTryIterableResponder[A, B](using Render[A], Render[B])(using CrudTexts, CrudIcons): Responder[Iterable[(A, Try[B])]] = new ItemTryIterableResponder
+  given itemTryIterableResponder[A, B](using Render[A], Render[B])(using RespondingTexts, RespondingIcons): Responder[Iterable[(A, Try[B])]] = new ItemTryIterableResponder
 
 trait Responding:
 

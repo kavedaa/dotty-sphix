@@ -8,7 +8,7 @@ import org.sphix.ui.editor.*
 
 import demo.*
 
-object PrimitiveDemo extends BorderPane with DemoUtils:
+object PrimitiveDemo extends BorderPane with Resources:
 
   val stringButton = new Button("String")
 

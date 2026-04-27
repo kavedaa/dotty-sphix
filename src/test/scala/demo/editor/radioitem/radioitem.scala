@@ -7,10 +7,12 @@ import javafx.geometry.Orientation
 import org.sphix.ui.editor.*
 import org.sphix.ui.RegionUtils
 
+import demo.*
+
 enum Country:
   case Norway, Sweden, Denmark, Finland, Iceland
 
-object RadioItemDemo extends BorderPane with RegionUtils:
+object RadioItemDemo extends BorderPane with RegionUtils with Resources:
 
   val mandatoryButton = new Button("Mandatory")
   val optionalButton = new Button("Optional")

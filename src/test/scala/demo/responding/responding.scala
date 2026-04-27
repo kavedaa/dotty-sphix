@@ -13,6 +13,8 @@ import org.sphix.*
 import org.sphix.ui.*
 import org.sphix.ui.crud.*
 
+import demo.*
+
 case class Person(name: String, age: Int)
 
 object Person:
@@ -21,18 +23,7 @@ object Person:
 
 @main def main = Application.launch(classOf[Demo])
 
-class Demo extends SimpleApp:
-
-  val getIcon = ResourceImageResolver(getClass, "/icons/" + _)
-
-  val successIcon = getIcon("accept.png")
-  val failureIcon = getIcon("cancel.png")
-
-  given CrudTexts = CrudTexts.Default
-
-  given CrudIcons = new CrudIcons.Default:
-    override def IsSuccess = Some(successIcon)
-    override def IsFailure = Some(failureIcon)
+class Demo extends SimpleApp with Resources:
 
   val defaultButton = new Button("A")
   val optionButton = new Button("Option[A]")

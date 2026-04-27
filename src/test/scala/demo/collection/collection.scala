@@ -12,6 +12,8 @@ import org.sphix.ui.crud.*
 
 import no.vedaadata.generator.*
 
+import demo.*
+
 @main def main = Application.launch(classOf[Demo])
 
 case class Person(name: String, age: Int)
@@ -19,7 +21,7 @@ case class Person(name: String, age: Int)
 object Person:
   given Generator[Person] = (Generator("Joe", "Tom", "Bob"), Generator.between(20, 80)).mapN(Person.apply)
 
-class Demo extends SimpleApp:
+class Demo extends SimpleApp with Resources:
 
   val generator = Generator[Person]
 
@@ -35,9 +37,6 @@ class Demo extends SimpleApp:
 
   def refresh() = 
     persons() = generator.generate(10)
-
-  given CrudTexts = CrudTexts.Default
-  given CrudIcons = CrudIcons.Default
 
   val pane: PersonPane = new PersonPane(add, delete, refresh)
 

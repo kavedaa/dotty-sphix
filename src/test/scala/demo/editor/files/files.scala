@@ -10,7 +10,7 @@ import org.sphix.ui.editor.*
 
 import demo.*
 
-object FilesDemo extends BorderPane with DemoUtils:
+object FilesDemo extends BorderPane with Resources:
 
   val icons = Map(
     "*"   -> getIcon("page_white.png"),

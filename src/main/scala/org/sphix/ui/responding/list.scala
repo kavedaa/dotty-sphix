@@ -16,7 +16,7 @@ import org.sphix.ui.crud.*
 import org.sphix.control.*
 import org.sphix.collection.ObservableSeq
 
-class TryIterableResponder[A](using render: Render[A])(using texts: CrudTexts, icons: CrudIcons) 
+class TryIterableResponder[A](using render: Render[A])(using texts: RespondingTexts, icons: RespondingIcons) 
   extends Responder[Iterable[Try[A]]]
   with RespondingUtils:
 
@@ -41,7 +41,7 @@ class TryIterableResponder[A](using render: Render[A])(using texts: CrudTexts, i
 
     new RespondingMonolog(vb, None).showAndWait()
 
-class TryListView[A](xs: ObservableSeq[Try[A]])(using render: Render[A])(using texts: CrudTexts, icons: CrudIcons)
+class TryListView[A](xs: ObservableSeq[Try[A]])(using render: Render[A])(using icons: RespondingIcons)
   extends ListView[Try[A]] with ListUtils[Try[A]]:
 
     setCell:
