@@ -143,8 +143,15 @@ abstract class TableCrudPane[A](using CrudTexts, CrudIcons)
   def table: TableView[A]
   def content: Node
 
-  lazy val selectedItem: Val[Option[A]] = table.getSelectionModel.selectedItemProperty.mapOption
   lazy val selectedItems: ObservableSeq[A] = table.getSelectionModel.getSelectedItems
+
+  /**
+    * This allows to have a single selection property that can be used for both single and multiple selection tables. 
+    * If the table is in single selection mode, the selected item, if any, will be returned as an `Option`. 
+    * If the table is in multiple selection mode, `None` will be returned, since there is no single selected item.
+    */
+  lazy val selectedItem: Val[Option[A]] = selectedItems.asVal.map: xs =>
+    if xs.size == 1 then xs.headOption else None
 
   override def init() =
     super.init()
