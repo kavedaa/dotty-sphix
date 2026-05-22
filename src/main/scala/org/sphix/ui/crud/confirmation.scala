@@ -4,15 +4,15 @@ import javafx.scene.control.{ Alert, ButtonType }
 
 import Alert.AlertType
 
-class Confirmation(using texts: CrudTexts):
+object Confirmation:
 
-  def confirmDelete[A](items: Seq[A])(f: A => String): Boolean =
-    if (items.size == 1) confirmDelete(f(items.head)) else confirmDelete(items.size)
+  def confirmDelete[A](items: Iterable[A])(using f: A => String)(using CrudTexts): Boolean =
+    if items.size == 1 then confirmDelete(f(items.head)) else confirmDelete(items.size)
 
-  def confirmDelete(item: String) = confirm(texts.ConfirmDeletion, texts.AskToDelete(item))
-  def confirmDelete(num: Int) = confirm(texts.ConfirmDeletion, texts.AskToDelete(texts.NumItems(num)))
+  def confirmDelete(item: String)(using texts: CrudTexts) = confirm(texts.ConfirmDeletion, texts.AskToDelete(item))
+  def confirmDelete(num: Int)(using texts: CrudTexts) = confirm(texts.ConfirmDeletion, texts.AskToDelete(texts.NumItems(num)))
 
-  def confirm(header: String, text: String): Boolean = 
+  def confirm(header: String, text: String)(using texts: CrudTexts): Boolean = 
     showAlert(AlertType.CONFIRMATION, Some(texts.Confirm), Some(header), Some(text))
       .filter(_ == ButtonType.OK)
       .isPresent
