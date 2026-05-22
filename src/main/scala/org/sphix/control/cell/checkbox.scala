@@ -40,6 +40,36 @@ trait CheckBoxCell extends Cell[Boolean] with DataCell[Boolean, Boolean]:
 //    println("setGraphic")
     setGraphic(checkbox)
 
+/**
+  * This is a bit of a hack to allow for showing a label in an editable checkbox cell.
+  * The JavaFX cell model requires that the cell's item type is the same as the type of the value being edited.
+  * Hence we have to make the label part of the item, and then write it back when committing the edit. 
+  * (Even if the label itself is not editable.)
+  * The data value is the label when the checkbox is selected, and None when it is not.
+  */
+trait CheckBoxLabelCell extends Cell[(Boolean, String)] with DataCell[(Boolean, String), String]:
+  cell =>
+
+  def dataValue(x: (Boolean, String)) = Option.when(x._1)(x._2)
+
+  lazy val checkBox = new CheckBox
+
+  def setEnable(x: Boolean) = checkBox.setDisable(!x)
+
+  val listener = new InvalidationListener:
+    def invalidated(o: Observable) =
+      val item = (checkBox.isSelected, checkBox.getText)
+      cell.startEdit()
+      cell.commitEdit(item)
+
+  override def onUpdate(item: (Boolean, String)) =
+    super.onUpdate(item)
+    checkBox.selectedProperty.removeListener(listener)
+    checkBox.setSelected(item._1)
+    checkBox.setText(item._2)
+    checkBox.selectedProperty.addListener(listener)
+    setGraphic(checkBox)
+
 
 class TriStateModel(checked0: Boolean, indeterminate0: Boolean):
   val checked = Var(checked0)

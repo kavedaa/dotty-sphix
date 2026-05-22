@@ -13,12 +13,20 @@ trait TreeTableColumnCells[S, T]:
   trait StringCell[A](using val toData: To[T, A])(using asOption: AsOption[A, String]) extends TreeTableCell[S, T] with cell.StringCell[T]:
     override def dataValue(x: T) = asOption(toData(x))
 
+  //  Editables
+
+  trait CheckBoxCell extends TreeTableCell[S, Boolean] with cell.CheckBoxCell:
+    def dataValue(x: Boolean) = Some(x)
+
+  trait CheckBoxLabelCell extends TreeTableCell[S, (Boolean, String)] with cell.CheckBoxLabelCell
+    
 
 trait TreeTableUtils[S]:
   this: TreeTableView[S] =>
 
   class Column[T](prefWidth: Option[Double])(text: String, f: S => ObservableValue[T])
-    extends TreeTableColumn[S, T](text):
+    extends TreeTableColumn[S, T](text)
+    with TreeTableColumnCells[S, T]:
 
     def this(prefWidth: Double)(text: String, f: S => ObservableValue[T]) =
       this(Some(prefWidth))(text, f)
