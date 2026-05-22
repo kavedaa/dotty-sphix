@@ -78,7 +78,7 @@ class Demo extends SimpleApp with Resources:
           x -> { if t then Success(()) else Failure(Exception("Ooops")) }
         .generate(3)
     println(res)
-    Responding.respondWith(x => s"Okay $x")(res)
+    Responding.respondAs("Okay")(res)
 
   // val res: Try[Seq[Try[String]]] = ???
   // Responding.respond(res)

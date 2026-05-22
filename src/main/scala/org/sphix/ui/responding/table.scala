@@ -20,7 +20,7 @@ class ItemTryIterableResponder[A, B](using renderA: Render[A], renderB: Render[B
   extends Responder[Iterable[(A, Try[B])]]
   with RespondingUtils:
 
-  def respond(xs: Iterable[(A, Try[B])])(using message: String => String) = 
+  def respond(xs: Iterable[(A, Try[B])])(message: Message) = 
 
     val numSuccesses = xs.count((_, t) => t.isSuccess)
     val numFailures = xs.count((_, t) => t.isFailure)
@@ -34,7 +34,7 @@ class ItemTryIterableResponder[A, B](using renderA: Render[A], renderB: Render[B
 
     val filtered = os.filtered(filter)
 
-    val table = new ItemTryTableView(filtered)(using renderA, renderB.andThen(message))
+    val table = new ItemTryTableView(filtered)(using renderA, message.transformRender(renderB))
 
     val vb = VBox(10, filterButtons.buttonBar, table)
     VBox.setVgrow(table, Priority.ALWAYS)

@@ -20,7 +20,7 @@ class TryIterableResponder[A](using render: Render[A])(using texts: RespondingTe
   extends Responder[Iterable[Try[A]]]
   with RespondingUtils:
 
-  def respond(xs: Iterable[Try[A]])(using message: String => String) = 
+  def respond(xs: Iterable[Try[A]])(message: Message) = 
 
     val numSuccesses = xs.count(_.isSuccess)
     val numFailures = xs.count(_.isFailure)
@@ -34,7 +34,7 @@ class TryIterableResponder[A](using render: Render[A])(using texts: RespondingTe
 
     val filtered = os.filtered(filter)
 
-    val list = new TryListView(filtered)(using render.andThen(message))
+    val list = new TryListView(filtered)(using message.transformRender(render))
 
     val vb = VBox(10, filterButtons.buttonBar, list)
     VBox.setVgrow(list, Priority.ALWAYS)
