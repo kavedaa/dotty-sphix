@@ -9,6 +9,7 @@ import javafx.scene.control.*
 import org.sphix.*
 import org.sphix.control.*
 import org.sphix.collection.ObservableSeq
+import org.sphix.util.TextFieldFactory
 
 trait EditorFactory[A]:
   def createEditor: Editor[A]
@@ -59,7 +60,7 @@ object EditorFactory:
   given (using Layouter[Container.Primitive]): EditorFactory[LocalDate] = new DatePickerEditorFactory
   given (using Layouter[Container.Primitive]): EditorFactory[Option[LocalDate]] = new DatePickerOptionEditorFactory
 
-  given [A] (using converter: ValueConverter[A])(using Layouter[Container.Primitive]): EditorFactory[A] = new ValueEditorFactory
+  given [A] (using converter: ValueConverter[A])(using Layouter[Container.Primitive]): EditorFactory[A] = new TextFieldEditorFactory(using TextFieldFactory.Clearable)
 
   //  the secret sauce
 

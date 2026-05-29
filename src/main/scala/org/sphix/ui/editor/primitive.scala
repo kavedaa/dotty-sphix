@@ -7,21 +7,35 @@ import javafx.scene.layout.*
 
 import org.sphix.*
 import org.sphix.control.*
-import org.sphix.control.ValueConverter
+import org.sphix.util.TextFieldFactory
 
-class ValueEditorFactory[A](using ValueConverter[A])(using Layouter[Container.Primitive]) extends EditorFactory[A]:
-  def createEditor = new ValueEditor[A]
 
-class ValueEditor[A](using converter: ValueConverter[A])(using Layouter[Container.Primitive])
-  extends Editor[A]:
+class TextFieldEditorFactory[A](using textFieldFactory: TextFieldFactory)(using converter: ValueConverter[A])(using Layouter[Container.Primitive]) extends EditorFactory[A]:
+  def createEditor = new TextFieldEditor[A]
+
+class TextFieldEditor[A](using textFieldFactory: TextFieldFactory)(using converter: ValueConverter[A])(using Layouter[Container.Primitive]) extends Editor[A]:
   type C = Container.Primitive
-  val valueField = new ValueField[A]
-  def get = valueField.getValue.get
-  val value = valueField.value
-  val status = valueField.value.map(_.status)
-  def set(x: A) = valueField.setValue(x)
-  def clear() = valueField.clear()
-  def container(label: Option[String]) = Container.Primitive(this, label, valueField)
+  val textField = textFieldFactory.create()
+  def get = converter.deconvert(textField.getText).get
+  val value = textField.textProperty.map(converter.deconvert)
+  val status = value.map(_.status)
+  def set(x: A) = textField.setText(converter.convert(x))
+  def clear() = textField.clear()
+  def container(label: Option[String]) = Container.Primitive(this, label, textField)
+
+// class ValueEditorFactory[A](using ValueConverter[A])(using Layouter[Container.Primitive]) extends EditorFactory[A]:
+//   def createEditor = new ValueEditor[A]
+
+// class ValueEditor[A](using converter: ValueConverter[A])(using Layouter[Container.Primitive])
+//   extends Editor[A]:
+//   type C = Container.Primitive
+//   val valueField = new ValueField[A]
+//   def get = valueField.getValue.get
+//   val value = valueField.value
+//   val status = valueField.value.map(_.status)
+//   def set(x: A) = valueField.setValue(x)
+//   def clear() = valueField.clear()
+//   def container(label: Option[String]) = Container.Primitive(this, label, valueField)
 
 
 class CheckBoxEditorFactory(using Layouter[Container.Primitive]) extends EditorFactory[Boolean]:
@@ -61,17 +75,6 @@ class BooleanRadiosEditor(trueText: String, falseText: String)(using layouter: L
   def container(label: Option[String]) = Container.Primitive(this, label, HBox(5, trueRadioButton, falseRadioButton))
 
 //  TODO could we do something like TextInputControlFactory?
-
-class TextFieldEditorFactory[A](using converter: ValueConverter[A])(using Layouter[Container.Primitive]) extends EditorFactory[A]:
-  def createEditor = new Editor[A]:
-    type C = Container.Primitive
-    val textField = new TextField
-    def get = converter.deconvert(textField.getText).get
-    val value = textField.textProperty.map(converter.deconvert)
-    val status = value.map(_.status)
-    def set(x: A) = textField.setText(converter.convert(x))
-    def clear() = textField.clear()
-    def container(label: Option[String]) = Container.Primitive(this, label, textField)
 
 class TextAreaEditorFactory[A](using ValueConverter[A])(using Layouter[Container.Primitive]) extends EditorFactory[A]:
   def createEditor = new TextAreaEditor

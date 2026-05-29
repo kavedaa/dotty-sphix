@@ -1,6 +1,6 @@
 package org.sphix.util
 
-import javafx.scene.control.TextField
+import javafx.scene.control.*
 
 import org.controlsfx.control.textfield.TextFields
 
@@ -16,6 +16,8 @@ object TextFieldFactory:
       def create() = textField
 
   val Default = TextFieldFactory(new TextField)
+
+  val Password = TextFieldFactory(new PasswordField)
 
   val Clearable = TextFieldFactory(TextFields.createClearableTextField())
 
