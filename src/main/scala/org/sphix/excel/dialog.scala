@@ -10,11 +10,22 @@ import org.sphix.*
 import org.sphix.ui.dialog.DialogUtils
 import org.sphix.collection.*
 
-class TableExcelOptionsDialog(table: TableView[?])
+/**
+  * A dialog for selecting rows and columns to include when exporting a TableView to Excel.
+  * If `includeColumns` is non-empty, only those columns will be available for selection. 
+  * The columns in `excludeColumns`, if any, will not be available for selection. 
+  * By default all columns are pre-selected.
+  */
+class TableExcelOptionsDialog(table: TableView[?], includeColumns: List[TableColumn[?, ?]] = Nil, excludeColumns: List[TableColumn[?, ?]] = Nil)
   extends Dialog[TableExcel.Options]
   with DialogUtils[TableExcel.Options]:
 
-  val columnPaths = TableExcel.getColumnPaths(table)
+  val columnPaths = 
+    TableExcel.getColumnPaths(table)
+      .filter: path =>
+        includeColumns.isEmpty || includeColumns.contains(path.leaf)
+      .filterNot: path =>
+        excludeColumns.contains(path.leaf)
 
   def title = "Options"
 
@@ -45,7 +56,7 @@ class TableExcelOptionsDialog(table: TableView[?])
         if allRowsButton.isSelected then Some(TableExcel.Options.Rows.All) 
         else if selectedRowsButton.isSelected then Some(TableExcel.Options.Rows.Selected) 
         else None
-      columns = TableExcel.Options.Columns.Include(includeColumnsList.getCheckModel.getCheckedItems.asScala.toList)
+      columns = TableExcel.Options.Columns.Only(includeColumnsList.getCheckModel.getCheckedItems.asScala.toList)
     yield TableExcel.Options(rows, columns)
 
   init()

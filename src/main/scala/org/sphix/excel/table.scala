@@ -17,8 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import no.vedaadata.excel.*
 import no.vedaadata.text.LabelTransformer
 
-import org.sphix.control.cell.DataCell
-import org.sphix.control.cell.DataType
+import org.sphix.control.cell.{ DataCell, DataType }
 
 object TableExcel:
 
@@ -33,7 +32,7 @@ object TableExcel:
 
     enum Columns:
       case All
-      case Include(columnPaths: List[ColumnPath])
+      case Only(columnPaths: List[ColumnPath])
 
     val Default = Options(Rows.All, Columns.All)
   
@@ -44,8 +43,8 @@ object TableExcel:
 
     given default: WidthFactor = 50.0
 
-  def optionsDialog(table: TableView[?])(using Window): TableExcelOptionsDialog =
-    new TableExcelOptionsDialog(table)
+  def optionsDialog(table: TableView[?], includeColumns: List[TableColumn[?, ?]] = Nil, excludeColumns: List[TableColumn[?, ?]] = Nil)(using Window): TableExcelOptionsDialog =
+    new TableExcelOptionsDialog(table, includeColumns, excludeColumns)
 
   def getColumnPaths(table: TableView[?]): List[ColumnPath] =
     table.getColumns.asScala.toList.flatMap(ColumnPath.leafs)
@@ -62,7 +61,7 @@ object TableExcel:
 
     val columnPaths = options.columns match
       case Options.Columns.All => allColumnPaths
-      case Options.Columns.Include(columnPaths) => columnPaths
+      case Options.Columns.Only(columnPaths) => columnPaths
 
     val columnDatas = ColumnData.fromColumnPaths(columnPaths)(baseCellStyle)
 

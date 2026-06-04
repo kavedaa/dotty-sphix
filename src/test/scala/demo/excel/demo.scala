@@ -10,12 +10,11 @@ import javafx.scene.control.*
 import no.vedaadata.generator.Generator
 
 import org.sphix.*
-import org.sphix.excel.TableExcel
+import org.sphix.control.*
 import org.sphix.concurrent.FutureModal
 import org.sphix.ui.*
+import org.sphix.excel.*
 import org.sphix.collection.*
-import org.sphix.control.derivedTable
-import org.sphix.excel.TableExcelOptionsDialog
 
 case class Person(
   firstName: String,
@@ -36,6 +35,38 @@ object Person:
 
   val persons = Generator[Person].generate(100)
 
+end Person
+
+class PersonTable 
+  extends TableView[Person]
+  with TableUtils[Person]:
+
+  val firstName = new Column("First name", _.firstName.toVal):
+    setDefaultCell()
+
+  val lastName = new Column("Last name", _.lastName.toVal):
+    setDefaultCell()
+
+  val age = new Column("Age", _.age.toVal):
+    setDefaultCell()
+
+  val fortune = new Column("Fortune", _.fortune.toVal):
+    setDefaultCell()
+
+  val isEmployee = new Column("Is employee", _.isEmployee.toVal):
+    setDefaultCell()
+
+  val birthDate = new Column("Birth date", _.birthDate.toVal):
+    setDefaultCell()
+
+  val lastLogin = new Column("Last login", _.lastLogin.toVal):
+    setDefaultCell()
+
+  val personal = new HeaderColumn("Personal", age, birthDate, fortune)
+
+  getColumns.addAll(firstName, lastName, personal, isEmployee, lastLogin)
+
+end PersonTable
 
 @main def main = Application.launch(classOf[TableExcelDemo])
 
@@ -49,10 +80,12 @@ class TableExcelDemo extends SimpleApp2("Table Excel demos"):
 
     val defaultButton = new Button("Default...")
     val chooseRowsAndColumnsButton = new Button("Choose rows and columns...")
+    val chooseIncludeColumnsButton = new Button("Choose include columns...")
+    val chooseExcludeColumnsButton = new Button("Choose exclude columns...")
 
-    val toolbar = new ToolBar(defaultButton, chooseRowsAndColumnsButton)
+    val toolbar = new ToolBar(defaultButton, chooseRowsAndColumnsButton, chooseIncludeColumnsButton, chooseExcludeColumnsButton)
 
-    val table = derivedTable[Person]
+    val table = new PersonTable
 
     table.setItems(Person.persons.toObservableList)
 
@@ -74,6 +107,14 @@ class TableExcelDemo extends SimpleApp2("Table Excel demos"):
 
     chooseRowsAndColumnsButton.setOnAction: _ =>
       TableExcel.optionsDialog(table).showAndWait().ifPresent: options =>
+        exportWithOptions(options)
+
+    chooseIncludeColumnsButton.setOnAction: _ =>
+      TableExcel.optionsDialog(table, includeColumns = List(table.firstName, table.age)).showAndWait().ifPresent: options =>
+        exportWithOptions(options)
+
+    chooseExcludeColumnsButton.setOnAction: _ =>
+      TableExcel.optionsDialog(table, excludeColumns = List(table.fortune, table.lastLogin)).showAndWait().ifPresent: options =>
         exportWithOptions(options)
 
     pane
