@@ -52,19 +52,20 @@ object Message:
 
 trait Responder[-A]:
   def respond(x: A)(message: Message): Unit
-//  def respondVerbose(x: A)(using message: String => String) = respond
 
 object Responder:
 
   import Responding.*
 
+  //  default responders
+
   given unitResponder: Responder[Unit] = UnitResponder
   given defaultResponder[A](using Render[A]): Responder[A] = new DefaultResponder
   given optionResponder[A](using Responder[A]): Responder[Option[A]] = new OptionResponder
-  given tryResponder[A](using Responder[A]): Responder[Try[A]] = new TryResponder
+  given throwableResponder: Responder[Throwable] = new ThrowableResponder
+  given tryResponder[A](using Responder[A])(using throwableResponder: Responder[Throwable]): Responder[Try[A]] = new TryResponder
   given iterableResponder[A](using Render[A]): Responder[Iterable[A]] = new IterableResponder
   given tryIterableResponder[A](using Render[A])(using RespondingTexts, RespondingIcons): Responder[Iterable[Try[A]]] = new TryIterableResponder
-//  @deprecated given tryItemIterableResponder[A, B](using Render[A], Render[B]): Responder[Iterable[(Try[A], B)]] = new TryItemIterableResponder
   given itemTryIterableResponder[A, B](using Render[A], Render[B])(using RespondingTexts, RespondingIcons): Responder[Iterable[(A, Try[B])]] = new ItemTryIterableResponder
 
 trait Responding:
@@ -97,11 +98,15 @@ class OptionResponder[A](using inner: Responder[A]) extends Responder[Option[A]]
   def respond(x: Option[A])(message: Message) = 
     x.foreach(value => inner.respond(value)(message))
 
-class TryResponder[A](using inner: Responder[A]) extends Responder[Try[A]]:
+class ThrowableResponder extends Responder[Throwable]:
+  def respond(ex: Throwable)(message: Message) = 
+    Responding.error(ex)
+
+class TryResponder[A](using inner: Responder[A])(using throwableResponder: Responder[Throwable]) extends Responder[Try[A]]:
   def respond(x: Try[A])(message: Message) = 
     x match
       case Success(value) => inner.respond(value)(message)
-      case Failure(ex) => Responding.error(ex)
+      case Failure(ex) => throwableResponder.respond(ex)(message)
 
 class IterableResponder[A](using render: Render[A]) extends Responder[Iterable[A]]:
   def respond(x: Iterable[A])(message: Message) = 
@@ -111,25 +116,6 @@ class IterableResponder[A](using render: Render[A]) extends Responder[Iterable[A
       setCell:
         new TextCell(x => message.transformRender(render)(x)) {}
     new RespondingMonolog(listView, None).showAndWait()
-
-
-// @deprecated
-// class TryItemIterableResponder[A, B](using renderA: Render[A], renderB: Render[B]) extends Responder[Iterable[(Try[A], B)]]:
-//   def respond(x: Iterable[(Try[A], B)])(message: String => String) = 
-//     val tableView = new TableView[(Try[A], B)] with TableUtils[(Try[A], B)]:
-//       val os = x.to(ObservableSeq)
-//       setItems(os)
-//       val tryColumn = new Column("", _._1.toVal):
-//         setCell:
-//           new TextCell( {
-//             case Success(x) => renderA(x).map(message)
-//             case Failure(ex) => Some(ex.getMessage)
-//           } ) {}
-//       val itemColumn = new Column("", _._2.toVal):
-//         setCell:
-//           new StringCell(using x => renderB(x)) {}
-//       getColumns.addAll(tryColumn, itemColumn)
-//     new RespondingMonolog(tableView, None).showAndWait()
 
 
 
