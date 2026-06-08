@@ -37,6 +37,7 @@ trait Resources:
     val Add = Some(getIcon("add.png"))
     val Remove = Some(getIcon("delete.png"))
     val Clear = Some(getIcon("cancel.png"))
+    val ClearSmall = Some(getIcon("cancel.png"))
     val Edit = None
     val Delete = None
     val Open = None

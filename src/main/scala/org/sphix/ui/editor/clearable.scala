@@ -10,7 +10,7 @@ class ClearableEditorFactory[A](inner: EditorFactory[A])(using texts: EditorText
     val innerEditor = inner.createEditor
     export innerEditor.{ get, set, value, status, clear }
     val clearButton = new Button:
-      icons.Clear match
+      icons.ClearSmall match
         case Some(image) => setGraphic(ImageView(image))
         case None => setText(texts.Clear)
       setOnAction(_ => clear())

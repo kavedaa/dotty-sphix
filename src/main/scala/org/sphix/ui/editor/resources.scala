@@ -10,5 +10,5 @@ trait EditorTexts:
 trait EditorIcons:
   def Add: Option[Image]
   def Remove: Option[Image]
-  def Clear: Option[Image]
+  def ClearSmall: Option[Image]
 
