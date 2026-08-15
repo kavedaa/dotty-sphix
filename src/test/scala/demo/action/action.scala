@@ -1,4 +1,4 @@
-package demo.crud
+package demo.action
 
 import scala.language.implicitConversions
 
@@ -10,7 +10,7 @@ import no.vedaadata.generator.*
 import org.sphix.*
 import org.sphix.collection.toObservableList
 import org.sphix.control.derivedTable
-import org.sphix.ui.crud.*
+import org.sphix.ui.action.*
 import org.sphix.collection.mutable.ObservableBuffer
 import org.sphix.control.derivedTable
 
@@ -27,22 +27,22 @@ class Demo extends SimpleApp with Resources:
 
   val persons = Generator[Person].generate(10).to(ObservableBuffer)
 
-  def add() = 
+  val add = ActionHandler[ActionType.Add]:
     Generator[Person].generate(1).foreach: person =>
       persons += person
 
-  def edit() = 
-    pane.selectedItem().foreach: person =>
+  val edit = ActionHandler[ActionType.Edit]:
+    pane.actionItem().foreach: person =>
       println(s"$person edited")
 
-  def delete() =     
-    pane.selectedItem().foreach: person =>
+  val delete = ActionHandler[ActionType.Delete]:
+    pane.actionItem().foreach: person =>
       persons.removeRef(person)
 
-  def clear() = 
+  val clear = ActionHandler[ActionType.Clear]:
     persons.clear()
 
-  def refresh() = 
+  val refresh = ActionHandler[ActionType.Refresh]:
     persons() = Generator[Person].generate(10)
 
   val pane: PersonPane = new PersonPane(add, edit, delete, clear, refresh)
@@ -52,13 +52,19 @@ class Demo extends SimpleApp with Resources:
   val root = pane
 
 
-class PersonPane(add: Crud.Op, edit: Crud.Op, delete: Crud.Op, clear: Crud.Op, refresh: Crud.Op)(using CrudTexts, CrudIcons)
-  extends TableCrudPane[Person]
-  with CrudPane.Add(add)
-  with CrudPane.Edit(edit)
-  with CrudPane.Delete(delete)
-  with CrudPane.Clear(clear)
-  with CrudPane.Refresh(refresh):
+class PersonPane(
+  add: ActionHandler[ActionType.Add], 
+  edit: ActionHandler[ActionType.Edit], 
+  delete: ActionHandler[ActionType.Delete], 
+  clear: ActionHandler[ActionType.Clear], 
+  refresh: ActionHandler[ActionType.Refresh])
+  (using ActionTexts, ActionIcons)
+  extends TableActionPane[Person]
+  with ActionPane.Add(add)
+  with ActionPane.Edit(edit)
+  with ActionPane.Delete(delete)
+  with ActionPane.Clear(clear)
+  with ActionPane.Refresh(refresh):
 
   val table = derivedTable[Person]
   table.getSelectionModel.setSelectionMode(SelectionMode.MULTIPLE)

@@ -1,15 +1,15 @@
 package org.sphix.util
 
-import org.sphix.ui.crud.*
-import org.sphix.ui.editor.*
 import org.sphix.ui.*
+import org.sphix.ui.action.*
+import org.sphix.ui.editor.*
 
 abstract class SphixTexts
-  extends CrudTexts
+  extends ActionTexts
   with EditorTexts
   with RespondingTexts
 
 abstract class SphixIcons
-  extends CrudIcons
+  extends ActionIcons
   with EditorIcons
   with RespondingIcons

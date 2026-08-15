@@ -4,15 +4,17 @@ import javafx.scene.control.{ Alert, ButtonType }
 
 import Alert.AlertType
 
+import org.sphix.ui.action.ActionTexts
+
 object Confirmation:
 
-  def confirmDelete[A](items: Iterable[A])(using f: A => String)(using CrudTexts): Boolean =
+  def confirmDelete[A](items: Iterable[A])(using f: A => String)(using ActionTexts): Boolean =
     if items.size == 1 then confirmDelete(f(items.head)) else confirmDelete(items.size)
 
-  def confirmDelete(item: String)(using texts: CrudTexts) = confirm(texts.ConfirmDeletion, texts.AskToDelete(item))
-  def confirmDelete(num: Int)(using texts: CrudTexts) = confirm(texts.ConfirmDeletion, texts.AskToDelete(texts.NumItems(num)))
+  def confirmDelete(item: String)(using texts: ActionTexts) = confirm(texts.ConfirmDeletion, texts.AskToDelete(item))
+  def confirmDelete(num: Int)(using texts: ActionTexts) = confirm(texts.ConfirmDeletion, texts.AskToDelete(texts.NumItems(num)))
 
-  def confirm(header: String, text: String)(using texts: CrudTexts): Boolean = 
+  def confirm(header: String, text: String)(using texts: ActionTexts): Boolean = 
     showAlert(AlertType.CONFIRMATION, Some(texts.Confirm), Some(header), Some(text))
       .filter(_ == ButtonType.OK)
       .isPresent

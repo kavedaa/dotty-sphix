@@ -8,7 +8,7 @@ import org.sphix.collection.*
 import org.sphix.collection.mutable.ObservableBuffer
 import org.sphix.control.*
 import org.sphix.control.given
-import org.sphix.ui.crud.*
+import org.sphix.ui.action.*
 
 import no.vedaadata.generator.*
 
@@ -27,15 +27,15 @@ class Demo extends SimpleApp with Resources:
 
   val persons = ObservableBuffer.from(generator.generate(10))
 
-  def add() = 
+  val add = ActionHandler[ActionType.Add]:
     generator.next().foreach(persons.addOne)
 
-  def delete() =     
-    pane.selectedItem().foreach: person =>
+  val delete = ActionHandler[ActionType.Delete]:
+    pane.actionItem().foreach: person =>
       val index = persons.indexWhere(_ eq person)
       if index != -1 then persons.remove(index)
 
-  def refresh() = 
+  val refresh = ActionHandler[ActionType.Refresh]:
     persons() = generator.generate(10)
 
   val pane: PersonPane = new PersonPane(add, delete, refresh)
@@ -49,11 +49,12 @@ class Demo extends SimpleApp with Resources:
   pane.info.textProperty <== numPersons.map(n => s"There are $n persons")
 
 
-class PersonPane(add: Crud.Op, delete: Crud.Op, refresh: Crud.Op)(using CrudTexts, CrudIcons)
-  extends TableCrudPane[Person]
-  with CrudPane.Add(add)
-  with CrudPane.Delete(delete)
-  with CrudPane.Refresh(refresh):
+class PersonPane(add: ActionHandler[ActionType.Add], delete: ActionHandler[ActionType.Delete], refresh: ActionHandler[ActionType.Refresh])
+  (using ActionTexts, ActionIcons)
+  extends TableActionPane[Person]
+  with ActionPane.Add(add)
+  with ActionPane.Delete(delete)
+  with ActionPane.Refresh(refresh):
 
   val table = derivedTable[Person]
   table.getSelectionModel.setSelectionMode(SelectionMode.MULTIPLE)
